@@ -1,0 +1,17 @@
+{
+	"Menu": "Menú",
+	"Kiddo Library": "Biblioteca Kiddo",
+	"http://biblioteca.kiddo3d.com/": "http://biblioteca.kiddo3d.com/",
+	"Configuration": "Configuración",
+	"Kiddo3D.com.ar": "Kiddo3D.com.ar",
+	"http://www.kiddo3d.com/": "http://www.kiddo3d.com/",
+	"Transfering File": "Cargando Archivo",
+	"Warming Up": "Calentando Impresora",
+	"Printing": "Imprimiendo",
+	"REMAINING TIME: {0}hs": "TIEMPO RESTANTE: {0}hs",
+	"Choose File": "Elegir Pieza",
+	"Stop Print Job": "Parar Impresión",
+	"Load Material": "Cargar Material",
+	"Unload Material": "Descargar Material",
+	"Print": "Imprimir"
+}

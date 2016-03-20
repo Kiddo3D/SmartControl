@@ -1,0 +1,182 @@
+{
+	"window": {
+		"fonts": {
+			"light": "Roboto-Light.ttf",
+			"normal": "Roboto-Medium.ttf",
+			"medium": "Roboto-Regular.ttf"
+		},
+		"width": "324",
+		"minimumWidth": "270",
+		"aspectRatio": "1.8",
+		"color": "#343434",
+		"header": {
+			"color": "#5AE8BA",
+			"menuButton": {
+				"color": "#43B68F",
+				"icon": "menu-open.png"
+			},
+			"title": {
+				"color": "#000000",
+				"font": {
+					"family": "Roboto",
+					"weight": "Medium"
+				}
+			},
+			"logo": "logo.png"
+		},
+		"menu": {
+			"color": "#606060",
+			"header": {
+				"color": "#3CB78E",
+				"title": {
+					"color": "#FFFFFF",
+					"font": {
+						"family": "Roboto",
+						"weight": "Medium"
+					}
+				},
+				"menuButton": {
+					"icon": "menu-close.png"
+				}				
+			},
+			"logo": "menu-logo.png",
+			"maxRows": "12",
+			"items": {
+				"color": {
+					"normal": "transparent",
+					"pressed": "#717070"
+				},
+				"label": {
+					"color": "#FFFFFF",
+					"font": {
+						"family": "Roboto",
+						"weight": "Normal"
+					}
+				},
+				"smartControl": {
+					"icon": "menu-smartcontrol.png",
+					"border": {
+						"color": "#52E8B9"
+					}
+				},
+				"library": {
+					"icon": "menu-library.png",
+					"border": {
+						"color": "#41D8A9"
+					}
+				},
+				"configuration": {
+					"icon": "menu-configuration.png",
+					"border": {
+						"color": "#28B78B"
+					}
+				},
+				"site": {
+					"icon": "menu-site.png",
+					"border": {
+						"color": "#1C8363"
+					}
+				}
+			},
+			"animation": {
+				"duration": "500"
+			}
+		},
+		"smartControl": {
+			"printers": {
+				"color": "#707070",
+				"bar": {
+					"color": "#4F4F4F"
+				}
+			},
+			"fileName": {
+				"color": "#FFFF93",
+				"font": {
+					"family": "Roboto",
+					"weight": "Light"
+				}
+			},
+			"progressBar": {
+				"inProgress": {
+					"color": "#343434",
+					"border": {
+						"color": "#52E8B9"
+					},
+					"bar": {
+						"color": "#E6E7E8"
+					},
+					"text": {
+						"color": "#A7A7A7"
+					}
+				},
+				"finished": {
+					"color": "#E6E7E8",
+					"border": {
+						"color": "#E6E7E8"
+					},
+					"text": {
+						"color": "#363636"
+					},
+					"animation": {
+						"duration": "500"
+					}
+				},
+				"text": {
+					"font": {
+						"family": "Roboto",
+						"weight": "Light"
+					}
+				},
+				"label": {
+					"color": "#8C8C8C",
+					"font": {
+						"family": "Roboto",
+						"weight": "Light"
+					}
+				}
+			},
+			"remainingTime": {
+				"color": "#FFFF93",
+				"font": {
+					"family": "Roboto",
+					"weight": "Medium"
+				}
+			},
+			"bar": {
+				"color": "#242424"
+			},
+			"buttons": {
+				"maxButtons": "6",
+				"radius": "5",
+				"normal": {
+					"color": "#61E6B9",
+					"border": {
+						"color": "transparent",
+						"bottom": {
+							"color": "#20C7A9"
+						}
+					},
+					"label": {
+						"color": "#454545",
+						"font": {
+							"family": "Roboto",
+							"weight": "Light"
+						}
+					}
+				},
+				"pressed": {
+					"color": "#20C7A9"
+				},
+				"disabled": {
+				"color": "transparent",
+					"border": {
+						"color": "#FFFFFF"
+					},
+					"label": {
+						"color": "#FFFFFF"
+					}
+				}
+			}
+		}
+	}
+}
