@@ -2,6 +2,7 @@ import os
 import sys
 import locale
 
+from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine
 
@@ -12,7 +13,9 @@ from smartcontrol.bindings.Bindings import Bindings
 
 class SmartControlApplication(QGuiApplication):
     def __init__(self, **kwargs):
+        QCoreApplication.addLibraryPath(os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins"))
         super().__init__(sys.argv, **kwargs)
+        self._mainQml = "main.qml"
         self._engine = None
 
     @classmethod
@@ -28,7 +31,8 @@ class SmartControlApplication(QGuiApplication):
         Theme.getInstance().load("default")
 
         self._engine = QQmlApplicationEngine()
-        self._engine.load(os.path.join("resources", "qml", "main.qml"))
+        self._engine.addImportPath(os.path.join(os.path.dirname(sys.executable), "qml"))
+        self._engine.load(os.path.join("resources", "qml", self._mainQml))
 
         sys.exit(self.exec_())
  
