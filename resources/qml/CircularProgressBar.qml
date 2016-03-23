@@ -58,6 +58,7 @@ Rectangle {
 			from: "IN_PROGRESS"
 			to: "FINISHED"
 			ColorAnimation { target: container; duration: SC.Theme.get("window.smartControl.progressBar.finished.animation.duration") }
+			ColorAnimation { target: text; duration: 0 }
 		}
 	]
 }
