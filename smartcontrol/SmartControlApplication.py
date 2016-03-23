@@ -11,6 +11,10 @@ from smartcontrol.Internationalization import Internationalization
 from smartcontrol.Theme import Theme
 from smartcontrol.bindings.Bindings import Bindings
 
+try:
+    from smartcontrol.Version import Version
+except ImportError:
+    version = "0.0.0"
 
 class SmartControlApplication(QGuiApplication):
     def __init__(self, **kwargs):
@@ -20,6 +24,7 @@ class SmartControlApplication(QGuiApplication):
             for dir in site.getsitepackages():
                 QCoreApplication.addLibraryPath(os.path.join(dir, "PyQt5", "plugins"))
         super().__init__(sys.argv, **kwargs)
+        self._version = version
         self._mainQml = "main.qml"
         self._engine = None
 
@@ -28,6 +33,9 @@ class SmartControlApplication(QGuiApplication):
         if SmartControlApplication._instance is None:
             SmartControlApplication._instance = cls()
         return SmartControlApplication._instance
+
+    def getVersion(self):
+        return self_.version
 
     def run(self):
         Bindings.register()
