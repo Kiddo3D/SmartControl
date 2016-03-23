@@ -1,6 +1,8 @@
 import json
 import os
-from re import _locale
+import sys
+
+from smartcontrol.Directories import Directories
 
 
 class Internationalization:
@@ -24,7 +26,7 @@ class Internationalization:
             with open(self._getInternationalization()) as f:
                 self._data = json.load(f)
 
-    def get(self, key, args = []):
+    def get(self, key, args=[]):
         value = self._data[key] if self._data is not None else key
         return value.format(*args)
 
@@ -40,6 +42,6 @@ class Internationalization:
         return os.path.join(self._getInternationalizationRoot(), self._locale + ".json")
 
     def _getInternationalizationRoot(self):
-        return os.path.abspath(os.path.join("resources", "i18n"))
+        return os.path.join(Directories.getApplicationPath(), "resources", "i18n")
 
     _instance = None

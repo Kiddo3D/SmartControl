@@ -1,5 +1,8 @@
 import json
 import os
+import sys
+
+from smartcontrol.Directories import Directories
 
 
 class Theme:
@@ -43,7 +46,7 @@ class Theme:
         return os.path.join(self._getThemesRoot(), self._name)
 
     def _getThemesRoot(self):
-        return os.path.abspath(os.path.join("resources", "themes"))
+        return os.path.join(Directories.getApplicationPath(), "resources", "themes")
 
     def _flattenDict(self, init, lkey=""):
         result = {}
