@@ -5,7 +5,7 @@ import sys
 from smartcontrol.Directories import Directories
 
 
-class Theme:
+class Theme(object):
     def __init__(self):
         _name = None
         _data = None

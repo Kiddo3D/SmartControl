@@ -5,7 +5,7 @@ import sys
 from smartcontrol.Directories import Directories
 
 
-class Internationalization:
+class Internationalization(object):
     def __init__(self):
         self._native = "en"
         self._locale = self._native
