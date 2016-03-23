@@ -35,7 +35,7 @@ class SmartControlApplication(QGuiApplication):
         return SmartControlApplication._instance
 
     def getVersion(self):
-        return self_.version
+        return self._version
 
     def run(self):
         Bindings.register()
