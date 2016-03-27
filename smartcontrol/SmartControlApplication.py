@@ -3,7 +3,7 @@ import sys
 import locale
 
 from PyQt5.QtCore import QCoreApplication
-from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtQml import QQmlApplicationEngine
 
 from smartcontrol.Resources import Resources
@@ -41,6 +41,8 @@ class SmartControlApplication(QGuiApplication):
 
         Internationalization.getInstance().load(locale.getdefaultlocale()[0])
         Theme.getInstance().load("default")
+
+        self.setWindowIcon(QIcon(Resources.getIcon("smart-control.png")))
 
         self._engine = QQmlApplicationEngine()
         if sys.platform == "win32":
