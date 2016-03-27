@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1
+Name=Smart Control
+GenericName=Smart Control
+Comment=Smart Control for Kiddo printers
+Exec=/usr/bin/smartcontrol %F
+TryExec=/usr/bin/smartcontrol
+Icon=/opt/kiddo/share/smartcontrol/resources/icons/smart-control.png
+Terminal=false
+Type=Application
+MimeType=application/gcode;
+Categories=Graphics;
+Keywords=3D;Printing;

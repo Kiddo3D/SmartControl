@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python3.4 /opt/kiddo/bin/SmartControlLauncher.py "$@"
