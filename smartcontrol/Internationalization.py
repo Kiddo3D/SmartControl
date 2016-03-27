@@ -2,7 +2,7 @@ import json
 import os
 import sys
 
-from smartcontrol.Directories import Directories
+from smartcontrol.Resources import Resources
 
 
 class Internationalization(object):
@@ -34,14 +34,14 @@ class Internationalization(object):
         return self._locale
 
     def getAvailableLocales(self):
-        locales = [f.split(".")[0] for f in os.listdir(self._getInternationalizationRoot())]
+        locales = [f.split(".")[0] for f in os.listdir(self._getInternationalizationPath())]
         locales.append(self._native)
         return locales
 
     def _getInternationalization(self):
-        return os.path.join(self._getInternationalizationRoot(), self._locale + ".json")
+        return os.path.join(self._getInternationalizationPath(), self._locale + ".json")
 
-    def _getInternationalizationRoot(self):
-        return os.path.join(Directories.getApplicationPath(), "resources", "i18n")
+    def _getInternationalizationPath(self):
+        return os.path.join(Resources.getPath(), "i18n")
 
     _instance = None

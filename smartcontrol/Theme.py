@@ -2,7 +2,7 @@ import json
 import os
 import sys
 
-from smartcontrol.Directories import Directories
+from smartcontrol.Resources import Resources
 
 
 class Theme(object):
@@ -25,28 +25,28 @@ class Theme(object):
         return self._data[key]
 
     def getIcon(self, key):
-        return os.path.join(self._getThemeRoot(), "icons", self.get(key))
+        return os.path.join(self._getThemePath(), "icons", self.get(key))
 
     def getImage(self, key):
-        return os.path.join(self._getThemeRoot(), "images", self.get(key))
+        return os.path.join(self._getThemePath(), "images", self.get(key))
 
     def getFont(self, key):
-        return os.path.join(self._getThemeRoot(), "fonts", self.get(key))
+        return os.path.join(self._getThemePath(), "fonts", self.get(key))
 
     def getName(self):
         return self._name
 
     def getAvailableThemes(self):
-        return [f for f in os.listdir(self._getThemesRoot())]
+        return [f for f in os.listdir(self._getThemesPath())]
 
     def _getTheme(self):
-        return os.path.join(self._getThemeRoot(), self._name + ".json")
+        return os.path.join(self._getThemePath(), self._name + ".json")
 
-    def _getThemeRoot(self):
-        return os.path.join(self._getThemesRoot(), self._name)
+    def _getThemePath(self):
+        return os.path.join(self._getThemesPath(), self._name)
 
-    def _getThemesRoot(self):
-        return os.path.join(Directories.getApplicationPath(), "resources", "themes")
+    def _getThemesPath(self):
+        return os.path.join(Resources.getPath(), "themes")
 
     def _flattenDict(self, init, lkey=""):
         result = {}
