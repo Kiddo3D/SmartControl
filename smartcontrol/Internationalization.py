@@ -23,7 +23,7 @@ class Internationalization(object):
             self._data = None
         else:
             self._locale = locale
-            with open(self._getInternationalization()) as f:
+            with open(self._getInternationalization(), encoding="utf-8") as f:
                 self._data = json.load(f)
 
     def get(self, key, args=[]):
