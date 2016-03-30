@@ -1,3 +1,4 @@
 #!/bin/bash
 
-python3.4 /opt/kiddo/bin/SmartControlLauncher.py "$@"
+PYTHONPATH=/opt/kiddo/lib/python3/dist-packages python3.4 /opt/kiddo/bin/SmartControlLauncher.py "$@"
+
