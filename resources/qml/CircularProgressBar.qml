@@ -1,6 +1,7 @@
 import QtQuick 2.2
 
 import SC 1.0 as SC
+import "util.js" as Util
 
 Rectangle {
 	id: container
@@ -34,12 +35,15 @@ Rectangle {
 
 	Text {
 		id: text
-		anchors.centerIn: parent
-		font.pixelSize: 0.35*parent.height * font.pixelSize / height
+		anchors.left: parent.left
+		anchors.right: parent.right
+		anchors.verticalCenter: parent.verticalCenter
+		horizontalAlignment: Text.AlignHCenter
 		font.family: SC.Theme.get("window.smartControl.progressBar.text.font.family")
-		font.weight: SC.Theme.get("window.smartControl.progressBar.text.font.family")
+		font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.progressBar.text.font.weight"))
+		Component.onCompleted: Util.setFontPixelSize(this, 0.35*parent.height)
+		onWidthChanged: Util.setFontPixelSize(this, 0.35*parent.height)
 	}
-
 	states: [
 		State {
 			name: "IN_PROGRESS"

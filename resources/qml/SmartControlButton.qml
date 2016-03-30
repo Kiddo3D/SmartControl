@@ -3,8 +3,10 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
 import SC 1.0 as SC
+import "util.js" as Util
 
 Button {
+	id: base
 	anchors.left: parent.left
 	anchors.right: parent.right
 	style: ButtonStyle {
@@ -37,9 +39,9 @@ Button {
 			horizontalAlignment: Text.AlignHCenter
 			color: control.enabled ? SC.Theme.get("window.smartControl.buttons.normal.label.color") : SC.Theme.get("window.smartControl.buttons.disabled.label.color")
 			clip: true
-			font.pixelSize: 0.5*control.height * font.pixelSize / contentHeight
 			font.family: SC.Theme.get("window.smartControl.buttons.normal.label.font.family")
-			font.weight: SC.Theme.get("window.smartControl.buttons.normal.label.font.weight")
+			font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.buttons.normal.label.font.weight"))
+			onHeightChanged: Util.setFontPixelSize(this, 0.5*control.height)
 		}
 	}
 }

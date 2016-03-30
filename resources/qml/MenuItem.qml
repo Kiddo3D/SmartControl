@@ -3,6 +3,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
 import SC 1.0 as SC
+import "util.js" as Util
 
 Button {
 	id: menuItem
@@ -21,28 +22,28 @@ Button {
 		anchors.bottomMargin: anchors.topMargin
 		anchors.leftMargin: 2*anchors.topMargin
 		anchors.rightMargin: anchors.leftMargin
-    }
+	}
 	style: ButtonStyle {
-    	background: Rectangle {
+		background: Rectangle {
 			color: control.pressed || selected ? SC.Theme.get("window.menu.items.color.pressed") : SC.Theme.get("window.menu.items.color.normal")
-            Rectangle {
-            	anchors.top: parent.top
-            	anchors.left: parent.left
-            	anchors.bottom: parent.bottom
-            	width: 0.02*parent.width
-		        color: borderColor
-		    }
-        }
-        label: Text {
-        	text: control.text
-        	anchors.left: parent.left
-        	anchors.leftMargin: icon.width + icon.anchors.leftMargin + icon.anchors.leftMargin
-    		verticalAlignment: Text.AlignVCenter
-	        color: SC.Theme.get("window.menu.items.label.color")
-	        clip: true
-    		font.pixelSize: (0.45*control.height) * font.pixelSize / contentHeight
-    		font.family: SC.Theme.get("window.menu.items.label.font.family")
-    		font.weight: SC.Theme.get("window.menu.items.label.font.weight")
+			Rectangle {
+				anchors.top: parent.top
+				anchors.left: parent.left
+				anchors.bottom: parent.bottom
+				width: 0.02*parent.width
+				color: borderColor
+			}
+		}
+		label: Text {
+			text: control.text
+			anchors.left: parent.left
+			anchors.leftMargin: icon.width + icon.anchors.leftMargin + icon.anchors.leftMargin
+			verticalAlignment: Text.AlignVCenter
+			color: SC.Theme.get("window.menu.items.label.color")
+			clip: true
+			font.family: SC.Theme.get("window.menu.items.label.font.family")
+			font.weight: Util.getFontWeight(SC.Theme.get("window.menu.items.label.font.weight"))
+			onWidthChanged: Util.setFontPixelSize(this, 0.45*control.height)
   		}
-    }
+	}
 }

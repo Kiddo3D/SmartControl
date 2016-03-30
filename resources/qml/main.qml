@@ -4,6 +4,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Window 2.1
 
 import SC 1.0 as SC
+import "util.js" as Util
 
 Window {
 	id: window
@@ -61,11 +62,14 @@ Window {
 			Text {
 				id: title
 				text: "Smart Control"
-				anchors.centerIn: parent
-				font.pixelSize: 0.35*parent.height * font.pixelSize / height
+				anchors.left: menuButton.right
+				anchors.right: logo.parent.left
+				anchors.verticalCenter: parent.verticalCenter
+				horizontalAlignment: Text.AlignHCenter
 				color: SC.Theme.get("window.header.title.color")
 				font.family: SC.Theme.get("window.header.title.font.family")
-				font.weight: SC.Theme.get("window.header.title.font.weight")
+				font.weight: Util.getFontWeight(SC.Theme.get("window.header.title.font.weight"))
+				onWidthChanged: Util.setFontPixelSize(this, 0.35*parent.height)
 			}
 
 			Item {
@@ -141,7 +145,7 @@ Window {
 					font.pixelSize: title.font.pixelSize
 					color: SC.Theme.get("window.menu.header.title.color")
 					font.family: SC.Theme.get("window.menu.header.title.font.family")
-					font.weight: SC.Theme.get("window.menu.header.title.font.weight")
+					font.weight: Util.getFontWeight(SC.Theme.get("window.menu.header.title.font.weight"))
 				}
 			}
 

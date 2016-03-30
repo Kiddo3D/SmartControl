@@ -2,8 +2,8 @@
 	"window": {
 		"fonts": {
 			"light": "Roboto-Light.ttf",
-			"normal": "Roboto-Medium.ttf",
-			"medium": "Roboto-Regular.ttf"
+			"normal": "Roboto-Regular.ttf",
+			"medium": "Roboto-Medium.ttf"
 		},
 		"width": "324",
 		"minimumWidth": "270",
@@ -19,7 +19,7 @@
 				"color": "#000000",
 				"font": {
 					"family": "Roboto",
-					"weight": "Medium"
+					"weight": "medium"
 				}
 			},
 			"logo": "logo.png"
@@ -32,7 +32,7 @@
 					"color": "#FFFFFF",
 					"font": {
 						"family": "Roboto",
-						"weight": "Medium"
+						"weight": "medium"
 					}
 				},
 				"menuButton": {
@@ -50,7 +50,7 @@
 					"color": "#FFFFFF",
 					"font": {
 						"family": "Roboto",
-						"weight": "Normal"
+						"weight": "normal"
 					}
 				},
 				"smartControl": {
@@ -93,7 +93,7 @@
 				"color": "#FFFF93",
 				"font": {
 					"family": "Roboto",
-					"weight": "Light"
+					"weight": "light"
 				}
 			},
 			"progressBar": {
@@ -124,14 +124,14 @@
 				"text": {
 					"font": {
 						"family": "Roboto",
-						"weight": "Light"
+						"weight": "light"
 					}
 				},
 				"label": {
 					"color": "#8C8C8C",
 					"font": {
 						"family": "Roboto",
-						"weight": "Light"
+						"weight": "light"
 					}
 				}
 			},
@@ -139,7 +139,7 @@
 				"color": "#FFFF93",
 				"font": {
 					"family": "Roboto",
-					"weight": "Medium"
+					"weight": "medium"
 				}
 			},
 			"bar": {
@@ -160,7 +160,7 @@
 						"color": "#454545",
 						"font": {
 							"family": "Roboto",
-							"weight": "Light"
+							"weight": "light"
 						}
 					}
 				},

@@ -2,10 +2,11 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.1
 
 import SC 1.0 as SC
+import "util.js" as Util
 
 ColumnLayout {
 	anchors.fill: parent
-	anchors.topMargin: 0.01*parent.height
+	anchors.topMargin: 0.01*(parent ? parent.height : 0)
 	anchors.leftMargin: (menuButton.width - menuButtonIcon.width)/2
 	anchors.rightMargin: anchors.leftMargin
 	anchors.bottomMargin: anchors.leftMargin
@@ -55,18 +56,23 @@ ColumnLayout {
 		}
 	}
 
-	Text {
-		id: fileNameLabel
-		text: "A File Name"
+	Item {
 		anchors.left: parent.left
 		anchors.right: parent.right
-		verticalAlignment: Text.AlignVCenter
-		horizontalAlignment: Text.AlignHCenter
-		color: SC.Theme.get("window.smartControl.fileName.color")
-		font.pixelSize: 0.45*height * font.pixelSize / contentHeight
 		Layout.preferredHeight: 0.07*parent.height
-		font.family: SC.Theme.get("window.smartControl.fileName.font.family")
-		font.weight: SC.Theme.get("window.smartControl.fileName.font.weight")
+		Text {
+			id: fileNameLabel
+			text: "A File Name"
+			anchors.left: parent.left
+			anchors.right: parent.right
+			anchors.verticalCenter: parent.verticalCenter
+			horizontalAlignment: Text.AlignHCenter
+			color: SC.Theme.get("window.smartControl.fileName.color")
+			font.family: SC.Theme.get("window.smartControl.fileName.font.family")
+			font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.fileName.font.weight"))
+			Component.onCompleted: Util.setFontPixelSize(this, 0.45*parent.height)
+			onWidthChanged: Util.setFontPixelSize(this, 0.45*parent.height)
+		}
 	}
 
 	Item {
@@ -102,9 +108,10 @@ ColumnLayout {
 						horizontalAlignment: Text.AlignHCenter
 						wrapMode: Text.WordWrap
 						color: SC.Theme.get("window.smartControl.progressBar.label.color")
-						font.pixelSize: 0.35*lineCount*parent.height * font.pixelSize / height
 						font.family: SC.Theme.get("window.smartControl.progressBar.label.font.family")
-						font.weight: SC.Theme.get("window.smartControl.progressBar.label.font.weight")
+						font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.progressBar.label.font.weight"))
+						Component.onCompleted: Util.setFontPixelSize(this, 0.35*parent.height)
+						onWidthChanged: Util.setFontPixelSize(this, 0.35*parent.height)
 					}
 				}
 			}
@@ -130,9 +137,10 @@ ColumnLayout {
 						horizontalAlignment: Text.AlignHCenter
 						wrapMode: Text.WordWrap
 						color: SC.Theme.get("window.smartControl.progressBar.label.color")
-						font.pixelSize: 0.35*lineCount*parent.height * font.pixelSize / height
 						font.family: SC.Theme.get("window.smartControl.progressBar.label.font.family")
-						font.weight: SC.Theme.get("window.smartControl.progressBar.label.font.weight")
+						font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.progressBar.label.font.weight"))
+						Component.onCompleted: Util.setFontPixelSize(this, 0.35*parent.height)
+						onWidthChanged: Util.setFontPixelSize(this, 0.35*parent.height)
 					}
 				}
 			}
@@ -158,28 +166,34 @@ ColumnLayout {
 						horizontalAlignment: Text.AlignHCenter
 						wrapMode: Text.WordWrap
 						color: SC.Theme.get("window.smartControl.progressBar.label.color")
-						font.pixelSize: 0.35*lineCount*parent.height * font.pixelSize / height
 						font.family: SC.Theme.get("window.smartControl.progressBar.label.font.family")
-						font.weight: SC.Theme.get("window.smartControl.progressBar.label.font.weight")
+						font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.progressBar.label.font.weight"))
+						Component.onCompleted: Util.setFontPixelSize(this, 0.35*parent.height)
+						onWidthChanged: Util.setFontPixelSize(this, 0.35*parent.height)
 					}
 				}
 			}
 		}
 	}
 
-	Text {
-		id: remainingTimeLabel
-		property string remainingTime: "00:00"
-		text: SC.i18n.get("REMAINING TIME: {0}hs", remainingTime)
+	Item {
 		anchors.left: parent.left
 		anchors.right: parent.right
-		verticalAlignment: Text.AlignVCenter
-		horizontalAlignment: Text.AlignHCenter
-		color: SC.Theme.get("window.smartControl.remainingTime.color")
-		font.pixelSize: height * font.pixelSize / contentHeight
-		font.family: SC.Theme.get("window.smartControl.remainingTime.font.family")
-		font.weight: SC.Theme.get("window.smartControl.remainingTime.font.weight")
 		Layout.preferredHeight: 0.035*parent.height
+		Text {
+			id: remainingTimeLabel
+			property string remainingTime: "00:00"
+			text: SC.i18n.get("REMAINING TIME: {0}hs", remainingTime)
+			anchors.left: parent.left
+			anchors.right: parent.right
+			anchors.verticalCenter: parent.verticalCenter
+			horizontalAlignment: Text.AlignHCenter
+			color: SC.Theme.get("window.smartControl.remainingTime.color")
+			font.family: SC.Theme.get("window.smartControl.remainingTime.font.family")
+			font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.remainingTime.font.weight"))
+			Component.onCompleted: Util.setFontPixelSize(this, 0.9*parent.height)
+			onWidthChanged: Util.setFontPixelSize(this, 0.9*parent.height)
+		}
 	}
 
 	Item {
@@ -219,25 +233,30 @@ ColumnLayout {
 
 			SmartControlButton {
 				text: SC.i18n.get("Choose File")
-				Layout.preferredHeight: parent.rowHeight
+				height: parent.rowHeight
+				Layout.preferredHeight: height
 			}
 			SmartControlButton {
 				text: SC.i18n.get("Stop Print Job")
-				Layout.preferredHeight: parent.rowHeight
+				height: parent.rowHeight
+				Layout.preferredHeight: height
 			}
 			SmartControlButton {
 				text: SC.i18n.get("Load Material")
-				Layout.preferredHeight: parent.rowHeight
+				height: parent.rowHeight
+				Layout.preferredHeight: height
 			}
 			SmartControlButton {
 				text: SC.i18n.get("Unload Material")
-				Layout.preferredHeight: parent.rowHeight
+				height: parent.rowHeight
+				Layout.preferredHeight: height
 			}
 			SmartControlButton {
 				text: SC.i18n.get("Print")
-				Layout.preferredHeight: parent.rowHeight
 				anchors.leftMargin: parent.width/4
 				anchors.rightMargin: anchors.leftMargin
+				height: parent.rowHeight
+				Layout.preferredHeight: height
 			}
 		}
 	}
