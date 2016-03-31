@@ -8,11 +8,13 @@ import "util.js" as Util
 
 Window {
 	id: window
-	width: SC.Theme.get("window.width")
-	minimumWidth: SC.Theme.get("window.minimumWidth")
+	flags: Qt.Window | Qt.WindowSystemMenuHint | Qt.WindowTitleHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint
+	width: SC.Theme.get("window.width")*Screen.devicePixelRatio
+	minimumWidth: width
+	maximumWidth: width
 	height: SC.Theme.get("window.aspectRatio")*width
-	minimumHeight: SC.Theme.get("window.aspectRatio")*width
-	maximumHeight: SC.Theme.get("window.aspectRatio")*width
+	minimumHeight: height
+	maximumHeight: height
 	title: "Smart Control"
 	visible: true
 	color: SC.Theme.get("window.color")
