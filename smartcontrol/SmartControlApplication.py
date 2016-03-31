@@ -26,7 +26,7 @@ class SmartControlApplication(QGuiApplication):
                 for dir in site.getsitepackages():
                     QCoreApplication.addLibraryPath(os.path.join(dir, "PyQt5", "plugins"))
         super().__init__(sys.argv, **kwargs)
-        self._version = version
+        self.setApplicationVersion(version)
         self._mainQml = "main.qml"
         self._engine = None
 
@@ -50,8 +50,5 @@ class SmartControlApplication(QGuiApplication):
         self._engine.load(os.path.join(Resources.getPath(), "qml", self._mainQml))
 
         sys.exit(self.exec_())
-
-    def getVersion(self):
-        return self._version
 
     _instance = None
