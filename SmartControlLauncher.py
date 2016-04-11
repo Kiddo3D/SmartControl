@@ -1,5 +1,5 @@
 from smartcontrol.SmartControlApplication import SmartControlApplication 
 
-
-app = SmartControlApplication.getInstance()
-app.run()
+if __name__ == "__main__":
+    app = SmartControlApplication.getInstance()
+    app.run()
