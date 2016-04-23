@@ -6,11 +6,11 @@ from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtQml import QQmlApplicationEngine
 
-from smartcontrol.Internationalization import Internationalization
-from smartcontrol.Resources import Resources
-from smartcontrol.Theme import Theme
-from smartcontrol.bindings.Bindings import Bindings
-from smartcontrol.printer.PrinterConnectionManager import PrinterConnectionManager
+from .Internationalization import Internationalization
+from .Resources import Resources
+from .Theme import Theme
+from .bindings.Bindings import Bindings
+from .printer.PrinterConnectionManager import PrinterConnectionManager
 
 
 try:

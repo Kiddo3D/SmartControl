@@ -2,8 +2,9 @@ from PyQt5.QtQml import qmlRegisterSingletonType
 
 from smartcontrol.Internationalization import Internationalization
 from smartcontrol.Theme import Theme
-from smartcontrol.bindings.InternationalizationProxy import InternationalizationProxy
-from smartcontrol.bindings.ThemeProxy import ThemeProxy
+
+from .InternationalizationProxy import InternationalizationProxy
+from .ThemeProxy import ThemeProxy
 
 
 class Bindings:

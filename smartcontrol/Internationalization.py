@@ -2,7 +2,7 @@ import json
 import os
 import sys
 
-from smartcontrol.Resources import Resources
+from .Resources import Resources
 
 
 class Internationalization(object):
