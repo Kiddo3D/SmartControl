@@ -40,7 +40,7 @@ Rectangle {
 		anchors.verticalCenter: parent.verticalCenter
 		horizontalAlignment: Text.AlignHCenter
 		font.family: SC.Theme.get("window.smartControl.progressBar.text.font.family")
-		font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.progressBar.text.font.weight"))
+		font.weight: Util.fontWeight(SC.Theme.get("window.smartControl.progressBar.text.font.weight"))
 		Component.onCompleted: Util.setFontPixelSize(this, 0.35*parent.height)
 		onWidthChanged: Util.setFontPixelSize(this, 0.35*parent.height)
 	}

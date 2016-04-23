@@ -34,7 +34,7 @@ class SmartControlApplication(QGuiApplication):
         self._printerConnectionManager = None
 
     @classmethod
-    def getInstance(cls):
+    def instance(cls):
         if SmartControlApplication._instance is None:
             SmartControlApplication._instance = cls()
         return SmartControlApplication._instance
@@ -44,10 +44,10 @@ class SmartControlApplication(QGuiApplication):
 
         self.aboutToQuit.connect(self._onClose)
 
-        Internationalization.getInstance().load(locale.getdefaultlocale()[0])
-        Theme.getInstance().load("default")
+        Internationalization.instance().load(locale.getdefaultlocale()[0])
+        Theme.instance().load("default")
 
-        self.setWindowIcon(QIcon(Resources.getIcon("smart-control.png")))
+        self.setWindowIcon(QIcon(Resources.icon("smart-control.png")))
 
         self._printerConnectionManager = PrinterConnectionManager()
         self._printerConnectionManager.start()
@@ -55,7 +55,7 @@ class SmartControlApplication(QGuiApplication):
         self._engine = QQmlApplicationEngine()
         if sys.platform == "win32":
             self._engine.addImportPath(os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "qml"))
-        self._engine.load(os.path.join(Resources.getPath(), "qml", self._mainQml))
+        self._engine.load(os.path.join(Resources.path(), "qml", self._mainQml))
 
         sys.exit(self.exec_())
 

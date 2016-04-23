@@ -40,7 +40,7 @@ Button {
 			color: control.enabled ? SC.Theme.get("window.smartControl.buttons.normal.label.color") : SC.Theme.get("window.smartControl.buttons.disabled.label.color")
 			clip: true
 			font.family: SC.Theme.get("window.smartControl.buttons.normal.label.font.family")
-			font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.buttons.normal.label.font.weight"))
+			font.weight: Util.fontWeight(SC.Theme.get("window.smartControl.buttons.normal.label.font.weight"))
 			onHeightChanged: Util.setFontPixelSize(this, 0.5*control.height)
 		}
 	}

@@ -11,37 +11,37 @@ class Internationalization(object):
         self._locale = self._native
 
     @classmethod
-    def getInstance(cls):
+    def instance(cls):
         if Internationalization._instance is None:
             Internationalization._instance = cls()
         return Internationalization._instance
 
     def load(self, locale):
         locale = locale.split("_")[0]
-        if (locale == self._native or locale not in self.getAvailableLocales()):
+        if (locale == self._native or locale not in self.availableLocales()):
             self._locale = self._native
             self._data = None
         else:
             self._locale = locale
-            with open(self._getInternationalization(), encoding="utf-8") as f:
+            with open(self._internationalization(), encoding="utf-8") as f:
                 self._data = json.load(f)
 
     def get(self, key, args=[]):
         value = self._data[key] if self._data is not None else key
         return value.format(*args)
 
-    def getLocale(self):
+    def locale(self):
         return self._locale
 
-    def getAvailableLocales(self):
-        locales = [f.split(".")[0] for f in os.listdir(self._getInternationalizationPath())]
+    def availableLocales(self):
+        locales = [f.split(".")[0] for f in os.listdir(self._internationalizationPath())]
         locales.append(self._native)
         return locales
 
-    def _getInternationalization(self):
-        return os.path.join(self._getInternationalizationPath(), self._locale + ".json")
+    def _internationalization(self):
+        return os.path.join(self._internationalizationPath(), self._locale + ".json")
 
-    def _getInternationalizationPath(self):
-        return os.path.join(Resources.getPath(), "i18n")
+    def _internationalizationPath(self):
+        return os.path.join(Resources.path(), "i18n")
 
     _instance = None

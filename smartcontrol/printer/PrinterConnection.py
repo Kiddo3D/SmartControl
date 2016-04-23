@@ -57,7 +57,7 @@ class PrinterConnection(Thread):
         return self._temperature
 
     def targetTemperature(self):
-        return self._printer.targetTemperature()
+        return self._printer.targetTemperature
 
     def printingProgress(self):
         return self._printingProgress
@@ -71,10 +71,10 @@ class PrinterConnection(Thread):
         try:
             # Use the first printer for now
             self._printer = Printers().instance().availablePrinters()[0]
-            self._connection = Serial(self._port.name(), self._printer.bps(), timeout=self.READ_TIMEOUT, write_timeout=self.WRITE_TIMEOUT)
+            self._connection = Serial(self._port.name(), self._printer.bps, timeout=self.READ_TIMEOUT, write_timeout=self.WRITE_TIMEOUT)
             # Read first bytes of boot searching for token 
-            boot = self._connection.read_until(self._printer.bootToken().encode(self.ENCODING), self.BOOT_READ_MAX).decode(self.ENCODING)
-            if not boot.endswith(self._printer.bootToken()):
+            boot = self._connection.read_until(self._printer.bootToken.encode(self.ENCODING), self.BOOT_READ_MAX).decode(self.ENCODING)
+            if not boot.endswith(self._printer.bootToken):
                 raise Exception("Not a Kiddo Printer")
             # Wait for boot to completely load
             time.sleep(self.BOOT_WAIT)
@@ -124,7 +124,7 @@ class PrinterConnection(Thread):
             self._close()
 
     def _parseResponse(self, response):
-        match = self._printer.readyResponseRegex().match(response)
+        match = self._printer.readyResponseRegex.match(response)
         if match:
             self._ready = True
             # Embedded response
@@ -134,28 +134,28 @@ class PrinterConnection(Thread):
         elif time.time() > self._lastReady + self.READY_TIMEOUT:
             self._ready = True
 
-        match = self._printer.temperatureResponseRegex().match(response)
+        match = self._printer.temperatureResponseRegex.match(response)
         if match:
             self._setTemperature(match.group(1))
             return
 
-        match = self._printer.firmwareInfoResponseRegex().match(response)
+        match = self._printer.firmwareInfoResponseRegex.match(response)
         if match:
             self._setFirmwareVersion(match.group(1))
             return
 
-        match = self._printer.printingProgressResponseRegex().match(response)
+        match = self._printer.printingProgressResponseRegex.match(response)
         if match:
             self._setState(self.State.PRINTING)
             self._setPrintingProgress(match.group("progress"), match.group("total"))
             return
 
-        match = self._printer.notPrintingResponseRegex().match(response)
+        match = self._printer.notPrintingResponseRegex.match(response)
         if match:
             self._setState(self.State.IDLE)
             return
 
-        match = self._printer.resendResponseRegex().match(response)
+        match = self._printer.resendResponseRegex.match(response)
         if match:
             self._transferIndex = match.group(1)
             return
@@ -166,13 +166,13 @@ class PrinterConnection(Thread):
         # "estimatedTime"
         # start Time?
 
-        match = self._printer.errorResponse().match(response)
+        match = self._printer.errorResponse.match(response)
         if match:
             pass  # TODO raise Exception("Error: " + response)
 
     def _send(self, command, retries=-1):
         try:
-            self._connection.write((command + self._printer.eol()).encode(self.ENCODING))
+            self._connection.write((command + self._printer.eol).encode(self.ENCODING))
             self._ready = False
             self._lastReady = time.time()
         except Exception as e:
@@ -206,16 +206,16 @@ class PrinterConnection(Thread):
     def _initialize(self):
         if self._state != self.State.INITIALIZING:
             return
-        commands = [(self._send, [command]) for command in self._printer.initializeCommands()]
+        commands = [(self._send, [command]) for command in self._printer.initializeCommands]
         self._queue.extend(commands)
 
     def _monitor(self):
         with self._lock:
             if self._state == self.State.PRINTING:
-                commands = [(self._send, [command])for command in self._printer.printingMonitoringCommands()]
+                commands = [(self._send, [command])for command in self._printer.printingMonitoringCommands]
                 self._queue.extendleft(commands)
             if self._state != self.State.DISCONNECTED:
-                self._monitorTimer = Timer(self._printer.monitoringFrequency(), self._queue.append, [(self._monitor, [])])
+                self._monitorTimer = Timer(self._printer.monitoringFrequency, self._queue.append, [(self._monitor, [])])
                 self._monitorTimer.start()
 
     def _close(self):
@@ -226,9 +226,9 @@ class PrinterConnection(Thread):
             self._connection.close()
 
     def _transfer(self):
-        data = self._gcode[(self._transferIndex - 1) * self._printer.chunkSize():self._transferIndex * self._printer.chunkSize()]
+        data = self._gcode[(self._transferIndex - 1) * self._printer.chunkSize:self._transferIndex * self._printer.chunkSize]
         self._send(self._printer.sendChunkCommand(index, data))
-        if self._transferIndex * self._printer.chunkSize() < len(self._gcode):
+        if self._transferIndex * self._printer.chunkSize < len(self._gcode):
             self._transferIndex += 1
             self._queue.appendleft((self._transfer, []))
 
@@ -239,19 +239,19 @@ class PrinterConnection(Thread):
         self._transferIndex = 1
         commands = [(self._setupTransfer, [gcode])]
         commands.append((self._setState, [self.State.TRANSFERING]))
-        commands.extend([(self._send, [command]) for command in self._printer.preTransferCommands()])
+        commands.extend([(self._send, [command]) for command in self._printer.preTransferCommands])
         commands.append((self._transfer, []))
-        commands.extend([(self._send, [command]) for command in self._printer.postTransferCommands()])
+        commands.extend([(self._send, [command]) for command in self._printer.postTransferCommands])
         commands.append((self._setState, [self.State.PRINTING]))
-        commands.extend([(self._send, [command]) for command in self._printer.printCommands()])
+        commands.extend([(self._send, [command]) for command in self._printer.printCommands])
         self._queue.extendleft(commands)
 
     def _stop(self):
         commands = []
         if self._state == self.State.TRANSFERING:
-            commands.append([(self._send, [command]) for command in self._printer.stopTransferCommands()])
+            commands.append([(self._send, [command]) for command in self._printer.stopTransferCommands])
         elif self._state == self.State.PRINTING:
-            commands.append([(self._send, [command]) for command in self._printer.stopPrintCommands()])
+            commands.append([(self._send, [command]) for command in self._printer.stopPrintCommands])
         else:
             return
         commands.append((self._setState, [self.State.IDLE]))
@@ -261,11 +261,11 @@ class PrinterConnection(Thread):
     def _loadFilament(self):
         if self._state != self.State.IDLE:
             return
-        commands = [(self._send, [command]) for command in self._printer.loadFilamentCommands()]
+        commands = [(self._send, [command]) for command in self._printer.loadFilamentCommands]
         self._queue.extendleft(commands)
 
     def _unloadFilament(self):
         if self._state != self.State.IDLE:
             return
-        commands = [(self._send, [command]) for command in self._printer.unloadFilamentCommands()]
+        commands = [(self._send, [command]) for command in self._printer.unloadFilamentCommands]
         self._queue.extendleft(commands)

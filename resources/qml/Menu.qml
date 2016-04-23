@@ -14,7 +14,7 @@ Rectangle {
 		anchors.right: parent.right
 
 		Image {
-			source: SC.Theme.getImage("window.menu.logo")
+			source: SC.Theme.image("window.menu.logo")
 			anchors.left: parent.left
 			anchors.right: parent.right
 			anchors.leftMargin: closeMenuButton.width
@@ -26,7 +26,7 @@ Rectangle {
 			id: smartControlMenuItem
 			property string source: "SmartControl.qml"
 			text: "Smart Control"
-			iconSource: SC.Theme.getIcon("window.menu.items.smartControl.icon")
+			iconSource: SC.Theme.icon("window.menu.items.smartControl.icon")
 			borderColor: SC.Theme.get("window.menu.items.smartControl.border.color")
 			selected: true
 			onClicked: menu.select(this)
@@ -36,7 +36,7 @@ Rectangle {
 			id: libraryMenuItem
 			property string source: SC.i18n.get("http://biblioteca.kiddo3d.com/")
 			text: SC.i18n.get("Kiddo Library")
-			iconSource: SC.Theme.getIcon("window.menu.items.library.icon")
+			iconSource: SC.Theme.icon("window.menu.items.library.icon")
 			borderColor: SC.Theme.get("window.menu.items.library.border.color")
 			onClicked: menu.select(this)
 			Layout.preferredHeight: parent.rowHeight
@@ -45,7 +45,7 @@ Rectangle {
 			id: configurationMenuItem
 			property string source: "Configuration.qml"
 			text: SC.i18n.get("Configuration")
-			iconSource: SC.Theme.getIcon("window.menu.items.configuration.icon")
+			iconSource: SC.Theme.icon("window.menu.items.configuration.icon")
 			borderColor: SC.Theme.get("window.menu.items.configuration.border.color")
 			onClicked: menu.select(this)
 			Layout.preferredHeight: parent.rowHeight
@@ -54,7 +54,7 @@ Rectangle {
 			id: webMenuItem
 			property string source: SC.i18n.get("http://www.kiddo3d.com/")
 			text: SC.i18n.get("Kiddo3D.com.ar")
-			iconSource: SC.Theme.getIcon("window.menu.items.site.icon")
+			iconSource: SC.Theme.icon("window.menu.items.site.icon")
 			borderColor: SC.Theme.get("window.menu.items.site.border.color")
 			onClicked: menu.select(this)
 			Layout.preferredHeight: parent.rowHeight

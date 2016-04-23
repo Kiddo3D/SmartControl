@@ -69,7 +69,7 @@ ColumnLayout {
 			horizontalAlignment: Text.AlignHCenter
 			color: SC.Theme.get("window.smartControl.fileName.color")
 			font.family: SC.Theme.get("window.smartControl.fileName.font.family")
-			font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.fileName.font.weight"))
+			font.weight: Util.fontWeight(SC.Theme.get("window.smartControl.fileName.font.weight"))
 			Component.onCompleted: Util.setFontPixelSize(this, 0.45*parent.height)
 			onWidthChanged: Util.setFontPixelSize(this, 0.45*parent.height)
 		}
@@ -109,7 +109,7 @@ ColumnLayout {
 						wrapMode: Text.WordWrap
 						color: SC.Theme.get("window.smartControl.progressBar.label.color")
 						font.family: SC.Theme.get("window.smartControl.progressBar.label.font.family")
-						font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.progressBar.label.font.weight"))
+						font.weight: Util.fontWeight(SC.Theme.get("window.smartControl.progressBar.label.font.weight"))
 						Component.onCompleted: Util.setFontPixelSize(this, 0.35*parent.height)
 						onWidthChanged: Util.setFontPixelSize(this, 0.35*parent.height)
 					}
@@ -138,7 +138,7 @@ ColumnLayout {
 						wrapMode: Text.WordWrap
 						color: SC.Theme.get("window.smartControl.progressBar.label.color")
 						font.family: SC.Theme.get("window.smartControl.progressBar.label.font.family")
-						font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.progressBar.label.font.weight"))
+						font.weight: Util.fontWeight(SC.Theme.get("window.smartControl.progressBar.label.font.weight"))
 						Component.onCompleted: Util.setFontPixelSize(this, 0.35*parent.height)
 						onWidthChanged: Util.setFontPixelSize(this, 0.35*parent.height)
 					}
@@ -167,7 +167,7 @@ ColumnLayout {
 						wrapMode: Text.WordWrap
 						color: SC.Theme.get("window.smartControl.progressBar.label.color")
 						font.family: SC.Theme.get("window.smartControl.progressBar.label.font.family")
-						font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.progressBar.label.font.weight"))
+						font.weight: Util.fontWeight(SC.Theme.get("window.smartControl.progressBar.label.font.weight"))
 						Component.onCompleted: Util.setFontPixelSize(this, 0.35*parent.height)
 						onWidthChanged: Util.setFontPixelSize(this, 0.35*parent.height)
 					}
@@ -190,7 +190,7 @@ ColumnLayout {
 			horizontalAlignment: Text.AlignHCenter
 			color: SC.Theme.get("window.smartControl.remainingTime.color")
 			font.family: SC.Theme.get("window.smartControl.remainingTime.font.family")
-			font.weight: Util.getFontWeight(SC.Theme.get("window.smartControl.remainingTime.font.weight"))
+			font.weight: Util.fontWeight(SC.Theme.get("window.smartControl.remainingTime.font.weight"))
 			Component.onCompleted: Util.setFontPixelSize(this, 0.9*parent.height)
 			onWidthChanged: Util.setFontPixelSize(this, 0.9*parent.height)
 		}

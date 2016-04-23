@@ -11,42 +11,42 @@ class Theme(object):
         _data = None
 
     @classmethod
-    def getInstance(cls):
+    def instance(cls):
         if Theme._instance is None:
             Theme._instance = cls()
         return Theme._instance
 
     def load(self, theme):
         self._name = theme
-        with open(self._getTheme()) as f:
+        with open(self._theme()) as f:
             self._data = self._flattenDict(json.load(f))
 
     def get(self, key):
         return self._data[key]
 
-    def getIcon(self, key):
-        return os.path.join(self._getThemePath(), "icons", self.get(key))
+    def icon(self, key):
+        return os.path.join(self._themePath(), "icons", self.get(key))
 
-    def getImage(self, key):
-        return os.path.join(self._getThemePath(), "images", self.get(key))
+    def image(self, key):
+        return os.path.join(self._themePath(), "images", self.get(key))
 
-    def getFont(self, key):
-        return os.path.join(self._getThemePath(), "fonts", self.get(key))
+    def font(self, key):
+        return os.path.join(self._themePath(), "fonts", self.get(key))
 
-    def getName(self):
+    def name(self):
         return self._name
 
-    def getAvailableThemes(self):
-        return [f for f in os.listdir(self._getThemesPath())]
+    def availableThemes(self):
+        return [f for f in os.listdir(self._themesPath())]
 
-    def _getTheme(self):
-        return os.path.join(self._getThemePath(), self._name + ".json")
+    def _theme(self):
+        return os.path.join(self._themePath(), self._name + ".json")
 
-    def _getThemePath(self):
-        return os.path.join(self._getThemesPath(), self._name)
+    def _themePath(self):
+        return os.path.join(self._themesPath(), self._name)
 
-    def _getThemesPath(self):
-        return os.path.join(Resources.getPath(), "themes")
+    def _themesPath(self):
+        return os.path.join(Resources.path(), "themes")
 
     def _flattenDict(self, init, lkey=""):
         result = {}

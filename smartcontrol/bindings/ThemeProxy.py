@@ -10,16 +10,16 @@ class ThemeProxy(QObject):
 
     @pyqtSlot(str, result=str)
     def get(self, key):
-        return Theme.getInstance().get(key)
+        return Theme.instance().get(key)
 
     @pyqtSlot(str, result=QUrl)
-    def getIcon(self, key):
-        return QUrl.fromLocalFile(Theme.getInstance().getIcon(key))
+    def icon(self, key):
+        return QUrl.fromLocalFile(Theme.instance().icon(key))
 
     @pyqtSlot(str, result=QUrl)
-    def getImage(self, key):
-        return QUrl.fromLocalFile(Theme.getInstance().getImage(key))
+    def image(self, key):
+        return QUrl.fromLocalFile(Theme.instance().image(key))
 
     @pyqtSlot(str, result=QUrl)
-    def getFont(self, key):
-        return QUrl.fromLocalFile(Theme.getInstance().getFont(key))
+    def font(self, key):
+        return QUrl.fromLocalFile(Theme.instance().font(key))

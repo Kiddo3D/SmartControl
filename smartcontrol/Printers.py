@@ -31,6 +31,6 @@ class Printers(object):
         return self._printers
 
     def _printersPath(self):
-        return os.path.join(Resources.getPath(), self.DIRECTORY)
+        return os.path.join(Resources.path(), self.DIRECTORY)
 
     _instance = None

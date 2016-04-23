@@ -4,11 +4,11 @@ import sys
 
 class Resources(object):
     @classmethod
-    def getIcon(cls, key):
-        return os.path.join(cls.getPath(), "icons", key)
+    def icon(cls, key):
+        return os.path.join(cls.path(), "icons", key)
 
     @classmethod
-    def getPath(cls):
+    def path(cls):
         base = None
         if "python" in os.path.basename(sys.executable):
             base = os.path.abspath(os.path.dirname(sys.argv[0]))

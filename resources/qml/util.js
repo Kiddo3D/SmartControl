@@ -2,7 +2,7 @@ function setFontPixelSize(text, height) {
 	text.font.pixelSize = Math.round(height * text.lineCount * text.font.pixelSize / text.contentHeight);
 }
 
-function getFontWeight(weight) {
+function fontWeight(weight) {
 	switch(weight) {
 		case "light": return Font.Light;
 		case "normal": return Font.Normal;

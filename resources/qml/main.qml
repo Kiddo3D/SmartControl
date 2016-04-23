@@ -20,13 +20,13 @@ Window {
 	color: SC.Theme.get("window.color")
 
 	FontLoader {
-		source: SC.Theme.getFont("window.fonts.light")
+		source: SC.Theme.font("window.fonts.light")
 	}
 	FontLoader {
-		source: SC.Theme.getFont("window.fonts.normal")
+		source: SC.Theme.font("window.fonts.normal")
 	}
 	FontLoader {
-		source: SC.Theme.getFont("window.fonts.medium")
+		source: SC.Theme.font("window.fonts.medium")
 	}
 
 	ColumnLayout {
@@ -50,7 +50,7 @@ Window {
 
 				Image {
 					id: menuButtonIcon
-					source: SC.Theme.getIcon("window.header.menuButton.icon")
+					source: SC.Theme.icon("window.header.menuButton.icon")
 					anchors.centerIn: parent
 					width: 0.5*parent.width
 					fillMode: Image.PreserveAspectFit
@@ -70,7 +70,7 @@ Window {
 				horizontalAlignment: Text.AlignHCenter
 				color: SC.Theme.get("window.header.title.color")
 				font.family: SC.Theme.get("window.header.title.font.family")
-				font.weight: Util.getFontWeight(SC.Theme.get("window.header.title.font.weight"))
+				font.weight: Util.fontWeight(SC.Theme.get("window.header.title.font.weight"))
 				onWidthChanged: Util.setFontPixelSize(this, 0.35*parent.height)
 			}
 
@@ -82,7 +82,7 @@ Window {
 	
 				Image {
 					id: logo
-					source: SC.Theme.getImage("window.header.logo")
+					source: SC.Theme.image("window.header.logo")
 					anchors.centerIn: parent
 					width: menuButtonIcon.width
 					fillMode: Image.PreserveAspectFit
@@ -131,7 +131,7 @@ Window {
 					width: parent.height
 
 					Image {
-						source: SC.Theme.getIcon("window.menu.header.menuButton.icon")
+						source: SC.Theme.icon("window.menu.header.menuButton.icon")
 						anchors.centerIn: parent
 						width: menuButtonIcon.width
 						fillMode: Image.PreserveAspectFit
@@ -147,7 +147,7 @@ Window {
 					font.pixelSize: title.font.pixelSize
 					color: SC.Theme.get("window.menu.header.title.color")
 					font.family: SC.Theme.get("window.menu.header.title.font.family")
-					font.weight: Util.getFontWeight(SC.Theme.get("window.menu.header.title.font.weight"))
+					font.weight: Util.fontWeight(SC.Theme.get("window.menu.header.title.font.weight"))
 				}
 			}
 
