@@ -1,15 +1,17 @@
+import locale
 import os
 import sys
-import locale
 
 from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtQml import QQmlApplicationEngine
 
-from smartcontrol.Resources import Resources
 from smartcontrol.Internationalization import Internationalization
+from smartcontrol.Resources import Resources
 from smartcontrol.Theme import Theme
 from smartcontrol.bindings.Bindings import Bindings
+from smartcontrol.printer.PrinterConnectionManager import PrinterConnectionManager
+
 
 try:
     from smartcontrol.Version import Version
@@ -29,6 +31,7 @@ class SmartControlApplication(QGuiApplication):
         self.setApplicationVersion(version)
         self._mainQml = "main.qml"
         self._engine = None
+        self._printerConnectionManager = None
 
     @classmethod
     def getInstance(cls):
@@ -39,10 +42,15 @@ class SmartControlApplication(QGuiApplication):
     def run(self):
         Bindings.register()
 
+        self.aboutToQuit.connect(self._onClose)
+
         Internationalization.getInstance().load(locale.getdefaultlocale()[0])
         Theme.getInstance().load("default")
 
         self.setWindowIcon(QIcon(Resources.getIcon("smart-control.png")))
+
+        self._printerConnectionManager = PrinterConnectionManager()
+        self._printerConnectionManager.start()
 
         self._engine = QQmlApplicationEngine()
         if sys.platform == "win32":
@@ -50,5 +58,8 @@ class SmartControlApplication(QGuiApplication):
         self._engine.load(os.path.join(Resources.getPath(), "qml", self._mainQml))
 
         sys.exit(self.exec_())
+
+    def _onClose(self):
+        self._printerConnectionManager.stop()
 
     _instance = None

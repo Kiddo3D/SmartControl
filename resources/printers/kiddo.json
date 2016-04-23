@@ -1,0 +1,45 @@
+{
+	"name": "Kiddo",
+	"eol": "\n",
+	"bootToken": "Author: Kiddo",
+	"bps": 250000,
+	"chunkSize": 512,
+	"targetTemperature": 200,
+
+	"commands": {
+		"sendChunk": "N{0}{1}", 
+		"sendChunkWithChecksum": "{0}*{1}"
+	},
+
+	"actions": {
+		"initialize": "M115\nM27\nM105\nM36",
+		"transfer": {
+			"pre": "M30 model.g\nM28 model.g",
+			"post": "M29 model.g"
+		},
+		"print": "M23 model.g\nM24",
+		"stop": {
+			"transfer": "M29 model.g\nM30 model.g",
+			"print": "M25"
+		},
+		"filament": {
+			"unload": "G10",
+			"load": "G11"
+		}
+	},
+
+	"responses": {
+		"ready": "ok(?: (.*))?", 
+		"temperature": "T:(\\d+(?:\\.\\d+)?) ",
+		"firmwareInfo": "FIRMWARE_NAME:.*PROTOCOL_VERSION:(.*) MACHINE_TYPE:",
+		"printingProgress": "SD printing byte (?P<progress>\\d+)/(?P<total>\\d+)",
+		"notPrinting": "Not SD printing",
+		"resend": "Resend: (\\d+)",
+		"error": "Error:(?:Printer halted|Printer stopped due to errors|Something is wrong|Cannot open subdir|SD init fail|volume.init failed|openRoot failed|workDir open failed|open failed|error writing to file|Cannot enter subdir)"
+	},
+
+	"monitoring": {
+		"frequency": 5,
+		"printing": "M105\nM27"
+	}
+}
