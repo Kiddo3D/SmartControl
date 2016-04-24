@@ -19,6 +19,12 @@ except ImportError:
     version = "0.0.0"
 
 class SmartControlApplication(QGuiApplication):
+    _instance = None
+
+    WINDOW_ICON = "smart-control.png"
+    DEFAULT_THEME = "default"
+    MAIN_QML = "main.qml"
+
     def __init__(self, **kwargs):
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
@@ -29,7 +35,6 @@ class SmartControlApplication(QGuiApplication):
                     QCoreApplication.addLibraryPath(os.path.join(dir, "PyQt5", "plugins"))
         super().__init__(sys.argv, **kwargs)
         self.setApplicationVersion(version)
-        self._mainQml = "main.qml"
         self._engine = None
         self._printerConnectionManager = None
 
@@ -45,9 +50,9 @@ class SmartControlApplication(QGuiApplication):
         self.aboutToQuit.connect(self._onClose)
 
         Internationalization.instance().load(locale.getdefaultlocale()[0])
-        Theme.instance().load("default")
+        Theme.instance().load(SmartControlApplication.DEFAULT_THEME)
 
-        self.setWindowIcon(QIcon(Resources.icon("smart-control.png")))
+        self.setWindowIcon(QIcon(Resources.icon(SmartControlApplication.WINDOW_ICON)))
 
         self._printerConnectionManager = PrinterConnectionManager()
         self._printerConnectionManager.start()
@@ -55,11 +60,9 @@ class SmartControlApplication(QGuiApplication):
         self._engine = QQmlApplicationEngine()
         if sys.platform == "win32":
             self._engine.addImportPath(os.path.join(os.path.abspath(os.path.dirname(sys.executable)), "qml"))
-        self._engine.load(os.path.join(Resources.path(), "qml", self._mainQml))
+        self._engine.load(Resources.qml(SmartControlApplication.MAIN_QML))
 
         sys.exit(self.exec_())
 
     def _onClose(self):
         self._printerConnectionManager.stop()
-
-    _instance = None

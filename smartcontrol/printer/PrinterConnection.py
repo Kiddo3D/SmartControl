@@ -36,7 +36,7 @@ class PrinterConnection(Thread):
         self._lock = RLock()
         self._port = port
         self._connection = None
-        self._state = self.State.DISCONNECTED
+        self._state = PrinterConnection.State.DISCONNECTED
         self._ready = True
         self._lastReady = 0
         self._gcode = None
@@ -66,20 +66,20 @@ class PrinterConnection(Thread):
         return self._printingTotal
 
     def open(self):
-        if self._state != self.State.DISCONNECTED:
+        if self._state != PrinterConnection.State.DISCONNECTED:
             return
         try:
             # Use the first printer for now
             self._printer = Printers().instance().availablePrinters()[0]
-            self._connection = Serial(self._port.name(), self._printer.bps, timeout=self.READ_TIMEOUT, write_timeout=self.WRITE_TIMEOUT)
+            self._connection = Serial(self._port.name(), self._printer.bps, timeout=PrinterConnection.READ_TIMEOUT, write_timeout=PrinterConnection.WRITE_TIMEOUT)
             # Read first bytes of boot searching for token 
-            boot = self._connection.read_until(self._printer.bootToken.encode(self.ENCODING), self.BOOT_READ_MAX).decode(self.ENCODING)
+            boot = self._connection.read_until(self._printer.bootToken.encode(PrinterConnection.ENCODING), PrinterConnection.BOOT_READ_MAX).decode(PrinterConnection.ENCODING)
             if not boot.endswith(self._printer.bootToken):
                 raise Exception("Not a Kiddo Printer")
             # Wait for boot to completely load
-            time.sleep(self.BOOT_WAIT)
+            time.sleep(PrinterConnection.BOOT_WAIT)
             # Initialize
-            self._setState(self.State.INITIALIZING)
+            self._setState(PrinterConnection.State.INITIALIZING)
             self._queue.clear()
             self._queue.extend(((self._initialize, []), (self._monitor, [])))
             self.start()
@@ -110,7 +110,7 @@ class PrinterConnection(Thread):
 
     def run(self):
         try:
-            while self._state != self.State.DISCONNECTED:
+            while self._state != PrinterConnection.State.DISCONNECTED:
                 if self._ready and self._queue:
                     with self._lock:
                         task = self._queue.popleft()
@@ -118,7 +118,7 @@ class PrinterConnection(Thread):
                         # If still ready execute next task
                         if self._ready:
                             continue
-                self._parseResponse(self._connection.readline().decode(self.ENCODING))
+                self._parseResponse(self._connection.readline().decode(PrinterConnection.ENCODING))
         except Exception as e:
             print(e)
             self._close()
@@ -131,7 +131,7 @@ class PrinterConnection(Thread):
             if match.lastindex:
                 self._parseResponse(match.group(1))
             return
-        elif time.time() > self._lastReady + self.READY_TIMEOUT:
+        elif time.time() > self._lastReady + PrinterConnection.READY_TIMEOUT:
             self._ready = True
 
         match = self._printer.temperatureResponseRegex.match(response)
@@ -146,13 +146,13 @@ class PrinterConnection(Thread):
 
         match = self._printer.printingProgressResponseRegex.match(response)
         if match:
-            self._setState(self.State.PRINTING)
+            self._setState(PrinterConnection.State.PRINTING)
             self._setPrintingProgress(match.group("progress"), match.group("total"))
             return
 
         match = self._printer.notPrintingResponseRegex.match(response)
         if match:
-            self._setState(self.State.IDLE)
+            self._setState(PrinterConnection.State.IDLE)
             return
 
         match = self._printer.resendResponseRegex.match(response)
@@ -172,15 +172,15 @@ class PrinterConnection(Thread):
 
     def _send(self, command, retries=-1):
         try:
-            self._connection.write((command + self._printer.eol).encode(self.ENCODING))
+            self._connection.write((command + self._printer.eol).encode(PrinterConnection.ENCODING))
             self._ready = False
             self._lastReady = time.time()
         except Exception as e:
             if retries < 0:
-                retries = self.WRITE_RETRIES
+                retries = PrinterConnection.WRITE_RETRIES
             if retries > 0:
                 # Wait before retrying
-                time.sleep(WRITE_RETRY_WAIT)
+                time.sleep(PrinterConnection.WRITE_RETRY_WAIT)
                 self._send(command, retries - 1)
             else:
                 raise e
@@ -204,22 +204,22 @@ class PrinterConnection(Thread):
         print("Printing progress: " + printingProgress + "/" + printingTotal)
 
     def _initialize(self):
-        if self._state != self.State.INITIALIZING:
+        if self._state != PrinterConnection.State.INITIALIZING:
             return
         commands = [(self._send, [command]) for command in self._printer.initializeCommands]
         self._queue.extend(commands)
 
     def _monitor(self):
         with self._lock:
-            if self._state == self.State.PRINTING:
+            if self._state == PrinterConnection.State.PRINTING:
                 commands = [(self._send, [command])for command in self._printer.printingMonitoringCommands]
                 self._queue.extendleft(commands)
-            if self._state != self.State.DISCONNECTED:
+            if self._state != PrinterConnection.State.DISCONNECTED:
                 self._monitorTimer = Timer(self._printer.monitoringFrequency, self._queue.append, [(self._monitor, [])])
                 self._monitorTimer.start()
 
     def _close(self):
-        self._setState(self.State.DISCONNECTED)
+        self._setState(PrinterConnection.State.DISCONNECTED)
         if self._monitorTimer is not None:
             self._monitorTimer.cancel()
         if self._connection is not None:
@@ -233,39 +233,39 @@ class PrinterConnection(Thread):
             self._queue.appendleft((self._transfer, []))
 
     def _printGcode(self, gcode):
-        if self._state != self.State.IDLE:
+        if self._state != PrinterConnection.State.IDLE:
             return
         self._gcode = gcode
         self._transferIndex = 1
         commands = [(self._setupTransfer, [gcode])]
-        commands.append((self._setState, [self.State.TRANSFERING]))
+        commands.append((self._setState, [PrinterConnection.State.TRANSFERING]))
         commands.extend([(self._send, [command]) for command in self._printer.preTransferCommands])
         commands.append((self._transfer, []))
         commands.extend([(self._send, [command]) for command in self._printer.postTransferCommands])
-        commands.append((self._setState, [self.State.PRINTING]))
+        commands.append((self._setState, [PrinterConnection.State.PRINTING]))
         commands.extend([(self._send, [command]) for command in self._printer.printCommands])
         self._queue.extendleft(commands)
 
     def _stop(self):
         commands = []
-        if self._state == self.State.TRANSFERING:
+        if self._state == PrinterConnection.State.TRANSFERING:
             commands.append([(self._send, [command]) for command in self._printer.stopTransferCommands])
-        elif self._state == self.State.PRINTING:
+        elif self._state == PrinterConnection.State.PRINTING:
             commands.append([(self._send, [command]) for command in self._printer.stopPrintCommands])
         else:
             return
-        commands.append((self._setState, [self.State.IDLE]))
+        commands.append((self._setState, [PrinterConnection.State.IDLE]))
         commands.append((self._queue.clear, []))
         self._queue.extendleft(commands)
 
     def _loadFilament(self):
-        if self._state != self.State.IDLE:
+        if self._state != PrinterConnection.State.IDLE:
             return
         commands = [(self._send, [command]) for command in self._printer.loadFilamentCommands]
         self._queue.extendleft(commands)
 
     def _unloadFilament(self):
-        if self._state != self.State.IDLE:
+        if self._state != PrinterConnection.State.IDLE:
             return
         commands = [(self._send, [command]) for command in self._printer.unloadFilamentCommands]
         self._queue.extendleft(commands)

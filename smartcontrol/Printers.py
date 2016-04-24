@@ -7,6 +7,8 @@ from .printer.Printer import Printer
 
 
 class Printers(object):
+    _instance = None
+
     ENCODING = "UTF-8"
     DIRECTORY = "printers"
 
@@ -23,7 +25,7 @@ class Printers(object):
     def load(self):
         printers = []
         for fileName in os.listdir(self._printersPath()):
-            with open(os.path.join(self._printersPath(), fileName), encoding=self.ENCODING) as file:
+            with open(os.path.join(self._printersPath(), fileName), encoding=Printers.ENCODING) as file:
                 printers.append(Printer(json.load(file)))
         self._printers = printers
 
@@ -31,6 +33,4 @@ class Printers(object):
         return self._printers
 
     def _printersPath(self):
-        return os.path.join(Resources.path(), self.DIRECTORY)
-
-    _instance = None
+        return os.path.join(Resources.path(), Printers.DIRECTORY)

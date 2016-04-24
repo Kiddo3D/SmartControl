@@ -4,7 +4,6 @@ from smartcontrol.Theme import Theme
 
 
 class ThemeProxy(QObject):
-
     def __init__(self, parent=None):
         super().__init__(parent)
 

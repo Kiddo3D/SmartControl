@@ -6,6 +6,14 @@ from .Resources import Resources
 
 
 class Theme(object):
+    _instance = None
+
+    ENCODING = "UTF-8"
+    DIRECTORY = "themes"
+    ICONS_DIRECTORY = "icons"
+    IMAGES_DIRECTORY = "images"
+    FONTS_DIRECTORY = "fonts"
+
     def __init__(self):
         _name = None
         _data = None
@@ -18,20 +26,20 @@ class Theme(object):
 
     def load(self, theme):
         self._name = theme
-        with open(self._theme()) as f:
+        with open(self._theme(), encoding=Theme.ENCODING) as f:
             self._data = self._flattenDict(json.load(f))
 
     def get(self, key):
         return self._data[key]
 
     def icon(self, key):
-        return os.path.join(self._themePath(), "icons", self.get(key))
+        return os.path.join(self._themePath(), Theme.ICONS_DIRECTORY, self.get(key))
 
     def image(self, key):
-        return os.path.join(self._themePath(), "images", self.get(key))
+        return os.path.join(self._themePath(), Theme.IMAGES_DIRECTORY, self.get(key))
 
     def font(self, key):
-        return os.path.join(self._themePath(), "fonts", self.get(key))
+        return os.path.join(self._themePath(), Theme.FONTS_DIRECTORY, self.get(key))
 
     def name(self):
         return self._name
@@ -46,7 +54,7 @@ class Theme(object):
         return os.path.join(self._themesPath(), self._name)
 
     def _themesPath(self):
-        return os.path.join(Resources.path(), "themes")
+        return os.path.join(Resources.path(), Theme.DIRECTORY)
 
     def _flattenDict(self, init, lkey=""):
         result = {}
@@ -57,5 +65,3 @@ class Theme(object):
             else:
                 result[key] = val
         return result
-
-    _instance = None

@@ -6,9 +6,14 @@ from .Resources import Resources
 
 
 class Internationalization(object):
+    _instance = None
+
+    ENCODING = "UTF-8"
+    DIRECTORY = "i18n"
+    NATIVE = "en"
+
     def __init__(self):
-        self._native = "en"
-        self._locale = self._native
+        self._locale = Internationalization.NATIVE
 
     @classmethod
     def instance(cls):
@@ -18,12 +23,12 @@ class Internationalization(object):
 
     def load(self, locale):
         locale = locale.split("_")[0]
-        if (locale == self._native or locale not in self.availableLocales()):
-            self._locale = self._native
+        if (locale == Internationalization.NATIVE or locale not in self.availableLocales()):
+            self._locale = Internationalization.NATIVE
             self._data = None
         else:
             self._locale = locale
-            with open(self._internationalization(), encoding="utf-8") as f:
+            with open(self._internationalization(), encoding=Internationalization.ENCODING) as f:
                 self._data = json.load(f)
 
     def get(self, key, args=[]):
@@ -35,13 +40,11 @@ class Internationalization(object):
 
     def availableLocales(self):
         locales = [f.split(".")[0] for f in os.listdir(self._internationalizationPath())]
-        locales.append(self._native)
+        locales.append(Internationalization.NATIVE)
         return locales
 
     def _internationalization(self):
         return os.path.join(self._internationalizationPath(), self._locale + ".json")
 
     def _internationalizationPath(self):
-        return os.path.join(Resources.path(), "i18n")
-
-    _instance = None
+        return os.path.join(Resources.path(), Internationalization.DIRECTORY)

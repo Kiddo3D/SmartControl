@@ -3,9 +3,17 @@ import sys
 
 
 class Resources(object):
+    DIRECTORY = "resources"
+    ICONS_DIRECTORY = "icons"
+    QML_DIRECTORY = "qml"
+
     @classmethod
     def icon(cls, key):
-        return os.path.join(cls.path(), "icons", key)
+        return os.path.join(cls.path(), Resources.ICONS_DIRECTORY, key)
+
+    @classmethod
+    def qml(cls, key):
+        return os.path.join(Resources.path(), Resources.QML_DIRECTORY, key)
 
     @classmethod
     def path(cls):
@@ -17,4 +25,4 @@ class Resources(object):
         elif hasattr(sys, "frozen"):
             base = os.path.abspath(os.path.dirname(sys.executable))
 
-        return os.path.join(base, "resources")
+        return os.path.join(base, Resources.DIRECTORY)
