@@ -242,12 +242,12 @@ ColumnLayout {
 				Layout.preferredHeight: height
 			}
 			SmartControlButton {
-				text: SC.i18n.get("Load Material")
+				text: SC.i18n.get("Load Filament")
 				height: parent.rowHeight
 				Layout.preferredHeight: height
 			}
 			SmartControlButton {
-				text: SC.i18n.get("Unload Material")
+				text: SC.i18n.get("Unload Filament")
 				height: parent.rowHeight
 				Layout.preferredHeight: height
 			}

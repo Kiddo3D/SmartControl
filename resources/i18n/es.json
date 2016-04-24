@@ -11,7 +11,7 @@
 	"REMAINING TIME: {0}hs": "TIEMPO RESTANTE: {0}hs",
 	"Choose File": "Elegir Pieza",
 	"Stop Print Job": "Parar Impresión",
-	"Load Material": "Cargar Material",
-	"Unload Material": "Descargar Material",
+	"Load Filament": "Cargar Material",
+	"Unload Filament": "Descargar Material",
 	"Print": "Imprimir"
 }
