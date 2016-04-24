@@ -3,13 +3,7 @@
 	"eol": "\n",
 	"bootToken": "Author: Kiddo",
 	"bps": 250000,
-	"chunkSize": 512,
 	"targetTemperature": 200,
-
-	"commands": {
-		"sendChunk": "N{0}{1}", 
-		"sendChunkWithChecksum": "{0}*{1}"
-	},
 
 	"actions": {
 		"initialize": "M115\nM27\nM105\nM36",
@@ -41,5 +35,12 @@
 	"monitoring": {
 		"frequency": 5,
 		"printing": "M105\nM27"
+	},
+
+	"transfer": {
+		"size": 512,
+		"data": "N{0}{1}", 
+		"dataWithChecksum": "{0}*{1}",
+		"checksum": "xor"
 	}
 }

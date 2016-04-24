@@ -226,9 +226,9 @@ class PrinterConnection(Thread):
             self._connection.close()
 
     def _transfer(self):
-        data = self._gcode[(self._transferIndex - 1) * self._printer.chunkSize:self._transferIndex * self._printer.chunkSize]
-        self._send(self._printer.sendChunkCommand(index, data))
-        if self._transferIndex * self._printer.chunkSize < len(self._gcode):
+        data = self._gcode[(self._transferIndex - 1) * self._printer.dataSize:self._transferIndex * self._printer.dataSize]
+        self._send(self._printer.dataCommand(index, data))
+        if self._transferIndex * self._printer.dataSize < len(self._gcode):
             self._transferIndex += 1
             self._queue.appendleft((self._transfer, []))
 
