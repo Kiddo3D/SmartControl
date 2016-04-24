@@ -9,7 +9,7 @@ from PyQt5.QtQml import QQmlApplicationEngine
 from .Internationalization import Internationalization
 from .Resources import Resources
 from .Theme import Theme
-from .bindings.Bindings import Bindings
+from .binder.Binder import Binder
 from .printer.PrinterConnectionManager import PrinterConnectionManager
 
 
@@ -35,8 +35,10 @@ class SmartControlApplication(QGuiApplication):
                     QCoreApplication.addLibraryPath(os.path.join(dir, "PyQt5", "plugins"))
         super().__init__(sys.argv, **kwargs)
         self.setApplicationVersion(version)
-        self._engine = None
-        self._printerConnectionManager = None
+        self._engine = QQmlApplicationEngine()
+        self._internationalization = Internationalization()
+        self._theme = Theme()
+        self._printerConnectionManager = PrinterConnectionManager()
 
     @classmethod
     def instance(cls):
@@ -45,17 +47,13 @@ class SmartControlApplication(QGuiApplication):
         return SmartControlApplication._instance
 
     def run(self):
-        Bindings.register()
+        self._internationalization.load(locale.getdefaultlocale()[0])
+        self._theme.load(SmartControlApplication.DEFAULT_THEME)
+        self._printerConnectionManager.start()
 
         self.aboutToQuit.connect(self._onClose)
-
-        Internationalization.instance().load(locale.getdefaultlocale()[0])
-        Theme.instance().load(SmartControlApplication.DEFAULT_THEME)
-
         self.setWindowIcon(QIcon(Resources.icon(SmartControlApplication.WINDOW_ICON)))
-
-        self._printerConnectionManager = PrinterConnectionManager()
-        self._printerConnectionManager.start()
+        Binder(self._internationalization, self._theme).register()
 
         self._engine = QQmlApplicationEngine()
         if sys.platform == "win32":
