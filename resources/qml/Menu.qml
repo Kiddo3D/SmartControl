@@ -1,4 +1,5 @@
 import QtQuick 2.2
+import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
 import SC 1.0 as SC
@@ -6,6 +7,8 @@ import SC 1.0 as SC
 Rectangle {
 	id: menu
 	color: SC.Theme.get("window.menu.color")
+
+	signal selected(string name, string source)
 
 	ColumnLayout {
 		property int rowHeight: menu.height/SC.Theme.get("window.menu.maxRows")
@@ -22,53 +25,49 @@ Rectangle {
 			Layout.preferredHeight: 2*parent.rowHeight
 			fillMode: Image.PreserveAspectFit
 		}
-		MenuItem {
-			id: smartControlMenuItem
-			property string source: "SmartControl.qml"
-			text: "Smart Control"
-			iconSource: SC.Theme.icon("window.menu.items.smartControl.icon")
+		ExclusiveGroup {
+			id: menuButtonGroup
+		}
+		MenuButton {
 			borderColor: SC.Theme.get("window.menu.items.smartControl.border.color")
-			selected: true
-			onClicked: menu.select(this)
 			Layout.preferredHeight: parent.rowHeight
+			action: Action {
+				text: "Smart Control"
+				iconSource: SC.Theme.icon("window.menu.items.smartControl.icon")
+				checkable: true
+				exclusiveGroup: menuButtonGroup
+				checked: true
+				onTriggered: menu.selected(text, "SmartControl.qml")
+			}
 		}
-		MenuItem {
-			id: libraryMenuItem
-			property string source: SC.i18n.get("http://biblioteca.kiddo3d.com/")
-			text: SC.i18n.get("Kiddo Library")
-			iconSource: SC.Theme.icon("window.menu.items.library.icon")
+		MenuButton {
 			borderColor: SC.Theme.get("window.menu.items.library.border.color")
-			onClicked: menu.select(this)
 			Layout.preferredHeight: parent.rowHeight
+			action: Action {
+				text: SC.i18n.get("Kiddo Library")
+				iconSource: SC.Theme.icon("window.menu.items.library.icon")
+				onTriggered: menu.selected(text, SC.i18n.get("http://biblioteca.kiddo3d.com/"))
+			}
 		}
-		MenuItem {
-			id: configurationMenuItem
-			property string source: "Configuration.qml"
-			text: SC.i18n.get("Configuration")
-			iconSource: SC.Theme.icon("window.menu.items.configuration.icon")
+		MenuButton {
 			borderColor: SC.Theme.get("window.menu.items.configuration.border.color")
-			onClicked: menu.select(this)
 			Layout.preferredHeight: parent.rowHeight
+			action: Action {
+				text: SC.i18n.get("Configuration")
+				iconSource: SC.Theme.icon("window.menu.items.configuration.icon")
+				checkable: true
+				exclusiveGroup: menuButtonGroup
+				onTriggered: menu.selected(text, "Configuration.qml")
+			}
 		}
-		MenuItem {
-			id: webMenuItem
-			property string source: SC.i18n.get("http://www.kiddo3d.com/")
-			text: SC.i18n.get("Kiddo3D.com.ar")
-			iconSource: SC.Theme.icon("window.menu.items.site.icon")
+		MenuButton {
 			borderColor: SC.Theme.get("window.menu.items.site.border.color")
-			onClicked: menu.select(this)
 			Layout.preferredHeight: parent.rowHeight
+			action: Action {
+				text: SC.i18n.get("Kiddo3D.com")
+				iconSource: SC.Theme.icon("window.menu.items.site.icon")
+				onTriggered: menu.selected(text, SC.i18n.get("http://www.kiddo3d.com/"))
+			}
 		}
-	}
-
-	signal itemSelected(string name, string source)
-
-	function select(menuItem) {
-		if (menuItem.source.match("^http:") != "http:") {
-			smartControlMenuItem.selected = false;
-			configurationMenuItem.selected = false;
-			menuItem.selected = true;
-		}
-		menu.itemSelected(menuItem.text, menuItem.source)
 	}
 }

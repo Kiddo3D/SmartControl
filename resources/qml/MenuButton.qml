@@ -6,14 +6,12 @@ import SC 1.0 as SC
 import "util.js" as Util
 
 Button {
-	id: menuItem
 	property color borderColor
-	property bool selected: false
 	anchors.left: parent.left
 	anchors.right: parent.right
 	Image {
 		id: icon
-		source: parent.iconSource
+		source: iconSource
 		fillMode: Image.PreserveAspectFit
 		anchors.top: parent.top
 		anchors.left: parent.left
@@ -25,7 +23,7 @@ Button {
 	}
 	style: ButtonStyle {
 		background: Rectangle {
-			color: control.pressed || selected ? SC.Theme.get("window.menu.items.color.pressed") : SC.Theme.get("window.menu.items.color.normal")
+			color: control.pressed || control.checked ? SC.Theme.get("window.menu.items.color.pressed") : SC.Theme.get("window.menu.items.color.normal")
 			Rectangle {
 				anchors.top: parent.top
 				anchors.left: parent.left
@@ -44,6 +42,7 @@ Button {
 			font.family: SC.Theme.get("window.menu.items.label.font.family")
 			font.weight: Util.fontWeight(SC.Theme.get("window.menu.items.label.font.weight"))
 			onWidthChanged: Util.setFontPixelSize(this, 0.45*control.height)
+			Component.onCompleted: Util.setFontPixelSize(this, 0.45*control.height)
   		}
 	}
 }

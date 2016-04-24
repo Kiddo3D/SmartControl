@@ -1,6 +1,6 @@
 import QtQuick 2.2
-import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
+import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 
 import SC 1.0 as SC
@@ -55,7 +55,7 @@ Window {
 					width: 0.5*parent.width
 					fillMode: Image.PreserveAspectFit
 				}
-	
+
 				MouseArea {
 					anchors.fill: parent
 					onClicked: menuWithHeader.state = menuWithHeader.state == "VISIBLE" ? "HIDDEN" : "VISIBLE"
@@ -137,7 +137,7 @@ Window {
 						fillMode: Image.PreserveAspectFit
 					}
 				}
-	
+
 				Text {
 					text: SC.i18n.get("Menu")
 					anchors.top: parent.top
@@ -162,7 +162,7 @@ Window {
 
 		Connections {
 			target: menuLoader.item
-			onItemSelected: {
+			onSelected: {
 				if (source.match("^http:") != "http:") {
 					title.text = name;
 					sectionLoader.source = source;
