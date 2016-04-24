@@ -1,4 +1,6 @@
 import QtQuick 2.2
+import QtQuick.Controls 1.1
+import QtQuick.Dialogs 1.1
 import QtQuick.Layouts 1.1
 
 import SC 1.0 as SC
@@ -11,6 +13,14 @@ ColumnLayout {
 	anchors.rightMargin: anchors.leftMargin
 	anchors.bottomMargin: anchors.leftMargin
 	spacing: 0
+
+	FileDialog {
+	    id: fileDialog
+	    folder: shortcuts.documents
+	    nameFilters: ["*.gcode"]
+	    onAccepted: {
+	    }
+	}
 
 	Rectangle {
 		id: printersContainer
@@ -232,9 +242,12 @@ ColumnLayout {
 			property int rowHeight: parent.height/SC.Theme.get("window.smartControl.buttons.maxButtons")
 
 			SmartControlButton {
-				text: SC.i18n.get("Choose File")
 				height: parent.rowHeight
 				Layout.preferredHeight: height
+				action: Action {
+					text: SC.i18n.get("Choose File")
+					onTriggered: fileDialog.open()
+				}
 			}
 			SmartControlButton {
 				text: SC.i18n.get("Stop Print Job")
