@@ -250,26 +250,34 @@ ColumnLayout {
 				}
 			}
 			SmartControlButton {
-				text: SC.i18n.get("Stop Print Job")
 				height: parent.rowHeight
 				Layout.preferredHeight: height
+				action: Action {
+					text: SC.i18n.get("Stop Print Job")
+				}
 			}
 			SmartControlButton {
-				text: SC.i18n.get("Load Filament")
 				height: parent.rowHeight
 				Layout.preferredHeight: height
+				action: Action {
+					text: SC.i18n.get("Load Filament")
+				}
 			}
 			SmartControlButton {
-				text: SC.i18n.get("Unload Filament")
 				height: parent.rowHeight
 				Layout.preferredHeight: height
+				action: Action {
+					text: SC.i18n.get("Unload Filament")
+				}
 			}
 			SmartControlButton {
-				text: SC.i18n.get("Print")
 				anchors.leftMargin: parent.width/4
 				anchors.rightMargin: anchors.leftMargin
 				height: parent.rowHeight
 				Layout.preferredHeight: height
+				action: Action {
+					text: SC.i18n.get("Print")
+				}
 			}
 		}
 	}
