@@ -44,4 +44,5 @@ Button {
 			onHeightChanged: Util.setFontPixelSize(this, 0.5*control.height)
 		}
 	}
+	Component.onCompleted: __behavior.cursorShape = Qt.PointingHandCursor
 }

@@ -9,13 +9,10 @@ from serial.tools import list_ports
 
 from .Port import Port
 from .PrinterConnection import PrinterConnection
-from .avr_isp import stk500v2
 
 
 class PrinterConnectionManager(QObject, Thread):
     INTERVAL = 10
-
-    connectionEstablished = pyqtSignal()
 
     def __init__ (self):
       super().__init__()
@@ -34,9 +31,9 @@ class PrinterConnectionManager(QObject, Thread):
                 else:
                     ports = []
                 # Filter open ports
-                ports = [port for port in ports if port.name() not in [connection.port().name() for connection in self._connections]]
+                ports = [port for port in ports if port.name not in [connection.port.name for connection in self._connections]]
                 # Give priority to USB ports
-                ports = sorted(ports, key=lambda port: 0 if port.type() == Port.Type.USB else 1)
+                ports = sorted(ports, key=lambda port: 0 if port.type == Port.Type.USB else 1)
                 # Attempt connections
                 if ports and self._running:
                     pool = Pool(len(ports))
@@ -62,7 +59,23 @@ class PrinterConnectionManager(QObject, Thread):
     def stop(self):
         self._running = False
 
+    def get(self, id):
+        for connection in self._connections:
+            if connection.id == id:
+                return connection
+        return None
+
     def _attemptConnection(self, port):
         connection = PrinterConnection(port)
+        connection.stateChanged.connect(self._stateTest)
+        connection.temperatureChanged.connect(self._temperatureTest)
+        connection.printProgressChanged.connect(self._printProgressTest)
         connection.open()
         return connection
+
+    def _stateTest(self, state):
+        print("State: " + state)
+    def _temperatureTest(self, t, tf):
+        print("Temperature: " + str(t) + " (" + str(tf) + ")")
+    def _printProgressTest(self, p, pf):
+        print("Print progress: " + str(p) + "/" + str(pf))

@@ -27,15 +27,90 @@ ColumnLayout {
 		anchors.left: parent.left
 		anchors.right: parent.right
 		Layout.preferredHeight: 0.115*parent.height
-		color: SC.Theme.get("window.smartControl.printers.color")
+		color: SC.Theme.get("window.smartControl.printer.color")
 
+		Item {
+			id: previousPrinterButton
+			anchors.top: parent.top
+			anchors.left: parent.left
+			anchors.bottom: parent.bottom
+			width: menuButton.width - (menuButton.width - menuButtonIcon.width)/2
+			Image {
+				source: SC.Theme.icon("window.smartControl.printer.arrow.left")
+				anchors.centerIn: parent
+				height: 0.4*parent.height
+				fillMode: Image.PreserveAspectFit
+				MouseArea {
+					anchors.fill: parent
+					cursorShape: Qt.PointingHandCursor
+				}
+			}
+		}
+		Item {
+			anchors.top: parent.top
+			anchors.left: previousPrinterButton.right
+			anchors.right: nextPrinterButton.left
+			anchors.bottom: parent.bottom
+			anchors.margins: 0.25*height
+			Item {
+				id: connectionTypeIcon
+				anchors.top: parent.top
+				anchors.left: parent.left
+				anchors.bottom: parent.bottom
+				width: parent.height
+				AnimatedImage {
+					source: SC.Theme.icon("window.smartControl.printer.type.usb")
+					anchors.fill: parent
+					fillMode: Image.PreserveAspectFit
+				}
+			}
+			Text {
+				id: printerName
+				text: SC.printer.name
+				anchors.left: connectionTypeIcon.right
+				anchors.right: parent.right
+				anchors.leftMargin: 0.15*parent.height
+				color: SC.Theme.get("window.smartControl.printer.name.text.color")
+				font.family: SC.Theme.get("window.smartControl.printer.name.text.font.family")
+				font.weight: Util.fontWeight(SC.Theme.get("window.smartControl.printer.name.text.font.weight"))
+				onWidthChanged: Util.setFontPixelSize(this, 0.6*parent.height)
+				Component.onCompleted: Util.setFontPixelSize(this, 0.6*parent.height)
+			}
+			Text {
+				text: SC.printer.port
+				anchors.top: printerName.bottom
+				anchors.left: printerName.left
+				anchors.right: parent.right
+				color: SC.Theme.get("window.smartControl.printer.port.text.color")
+				font.family: SC.Theme.get("window.smartControl.printer.port.text.font.family")
+				font.weight: Util.fontWeight(SC.Theme.get("window.smartControl.printer.port.text.font.weight"))
+				font.pixelSize: printerName.font.pixelSize/2
+			}
+		}
+		Item {
+			id: nextPrinterButton
+			anchors.top: parent.top
+			anchors.right: parent.right
+			anchors.bottom: parent.bottom
+			width: menuButton.width - (menuButton.width - menuButtonIcon.width)/2
+			Image {
+				source: SC.Theme.icon("window.smartControl.printer.arrow.right")
+				anchors.centerIn: parent
+				height: 0.4*parent.height
+				fillMode: Image.PreserveAspectFit
+				MouseArea {
+					anchors.fill: parent
+					cursorShape: Qt.PointingHandCursor
+				}
+			}
+		}
 		Rectangle {
 			id: printersContainerBar
 			anchors.left: parent.left
 			anchors.right: parent.right
 			anchors.verticalCenter: parent.bottom
 			height: 0.03*parent.height
-			color: SC.Theme.get("window.smartControl.printers.bar.color")
+			color: SC.Theme.get("window.smartControl.printer.bar.color")
 
 			Rectangle {
 				id: printersContainerBarPoint
@@ -53,9 +128,24 @@ ColumnLayout {
 		anchors.left: parent.left
 		anchors.right: parent.right
 		z: parent.z - 1
-		color: "transparent"
+		color: SC.Theme.get("window.smartControl.info.color")
 		radius: 5
 		Layout.preferredHeight: 0.03*parent.height
+
+		Text {
+			z: parent.z + 2
+			anchors.left: parent.left
+			anchors.right: parent.right
+			anchors.verticalCenter: parent.verticalCenter
+			horizontalAlignment: Text.AlignHCenter
+			text: SC.i18n.get("Keep the device close to the printer")
+			color: SC.Theme.get("window.smartControl.info.text.color")
+			font.family: SC.Theme.get("window.smartControl.info.text.font.family")
+			font.weight: Util.fontWeight(SC.Theme.get("window.smartControl.info.text.font.weight"))
+			visible: !Qt.colorEqual(parent.color, "transparent")
+			onWidthChanged: Util.setFontPixelSize(this, 0.9*parent.height)
+			Component.onCompleted: Util.setFontPixelSize(this, 0.9*parent.height)
+		}
 
 		Rectangle {
 			color: parent.color
@@ -72,7 +162,7 @@ ColumnLayout {
 		Layout.preferredHeight: 0.07*parent.height
 		Text {
 			id: fileNameLabel
-			text: "A File Name"
+			text: "..."
 			anchors.left: parent.left
 			anchors.right: parent.right
 			anchors.verticalCenter: parent.verticalCenter
@@ -86,6 +176,11 @@ ColumnLayout {
 	}
 
 	Item {
+// TODO SACAR!!!
+MouseArea{
+anchors.fill: parent
+onClicked: SC.printer.select("COM3")
+}
 		id: progressBarsContainer
 		anchors.left: parent.left
 		anchors.right: parent.right
@@ -104,6 +199,7 @@ ColumnLayout {
 		
 				CircularProgressBar {
 					id: transferProgressBar
+					progress: SC.printer.transferProgress
 				}
 				Item {
 					anchors.top: transferProgressBar.bottom
@@ -132,10 +228,11 @@ ColumnLayout {
 				Layout.fillWidth: true
 	
 				CircularProgressBar {
-					id: warmUpProgressBar
+					id: warmupProgressBar
+					progress: SC.printer.warmupProgress
 				}
 				Item {
-					anchors.top: warmUpProgressBar.bottom
+					anchors.top: warmupProgressBar.bottom
 					anchors.left: parent.left
 					anchors.right: parent.right
 					anchors.bottom: parent.bottom
@@ -162,6 +259,7 @@ ColumnLayout {
 	
 				CircularProgressBar {
 					id: printProgressBar
+					progress: SC.printer.printProgress
 				}
 				Item {
 					anchors.top: printProgressBar.bottom
@@ -254,6 +352,7 @@ ColumnLayout {
 				Layout.preferredHeight: height
 				action: Action {
 					text: SC.i18n.get("Stop Print Job")
+					onTriggered: SC.printer.stop()
 				}
 			}
 			SmartControlButton {
@@ -261,6 +360,7 @@ ColumnLayout {
 				Layout.preferredHeight: height
 				action: Action {
 					text: SC.i18n.get("Load Filament")
+					onTriggered: SC.printer.loadFilament()
 				}
 			}
 			SmartControlButton {
@@ -268,6 +368,7 @@ ColumnLayout {
 				Layout.preferredHeight: height
 				action: Action {
 					text: SC.i18n.get("Unload Filament")
+					onTriggered: SC.printer.unloadFilament()
 				}
 			}
 			SmartControlButton {
@@ -277,6 +378,7 @@ ColumnLayout {
 				Layout.preferredHeight: height
 				action: Action {
 					text: SC.i18n.get("Print")
+					onTriggered: SC.printer.printGcode()
 				}
 			}
 		}

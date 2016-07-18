@@ -24,7 +24,7 @@ class Printer(object):
         self.readyResponseRegex = re.compile(data["responses"]["ready"])
         self.temperatureResponseRegex = re.compile(data["responses"]["temperature"])
         self.firmwareInfoResponseRegex = re.compile(data["responses"]["firmwareInfo"])
-        self.printingProgressResponseRegex = re.compile(data["responses"]["printingProgress"])
+        self.printProgressResponseRegex = re.compile(data["responses"]["printProgress"])
         self.notPrintingResponseRegex = re.compile(data["responses"]["notPrinting"])
         self.resendResponseRegex = re.compile(data["responses"]["resend"])
         self.errorResponse = re.compile(data["responses"]["error"])

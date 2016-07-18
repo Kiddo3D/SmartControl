@@ -1,19 +1,16 @@
 from collections import deque
 from enum import Enum
-import re
 from threading import RLock
-from threading import Thread
 from threading import Timer
 import time
 
+from PyQt5.QtCore import QThread, pyqtSignal
 from serial import Serial 
 
 from smartcontrol.Printers import Printers
 
-from .Port import Port
 
-
-class PrinterConnection(Thread):
+class PrinterConnection(QThread):
     class State(Enum):
         DISCONNECTED = 0
         INITIALIZING = 1
@@ -30,48 +27,46 @@ class PrinterConnection(Thread):
     BOOT_WAIT = 1
     READY_TIMEOUT = 5
 
+    stateChanged = pyqtSignal("QString")
+    temperatureChanged = pyqtSignal(float, float)
+    printProgressChanged = pyqtSignal(int, int)
+
     def __init__(self, port):
-        super().__init__(daemon=False)
+        super().__init__()
         self._queue = deque()
         self._lock = RLock()
-        self._port = port
         self._connection = None
-        self._state = PrinterConnection.State.DISCONNECTED
         self._ready = True
         self._lastReady = 0
         self._gcode = None
         self._monitorTimer = None
         self._transferIndex = 1
-        self._firmwareVersion = None
-        self._temperature = 0
-        self._printingProgress = 0
-        self._printingTotal = 0
 
-    def port(self):
-        return self._port
+        self.state = PrinterConnection.State.DISCONNECTED
+        self.id = port.name
+        self.port = port
+        self.firmwareVersion = None
+        self.transferProgress = 0
+        self.transferTotal = 0
+        self.temperature = 0
+        self.printProgress = 0
+        self.printTotal = 0
 
-    def firmwareVersion(self):
-        return self._firmwareVersion
+    @property
+    def name(self):
+        return self._printer.name
 
-    def temperature(self):
-        return self._temperature
-
+    @property
     def targetTemperature(self):
         return self._printer.targetTemperature
 
-    def printingProgress(self):
-        return self._printingProgress
-
-    def printingTotal(self):
-        return self._printingTotal
-
     def open(self):
-        if self._state != PrinterConnection.State.DISCONNECTED:
+        if self.state != PrinterConnection.State.DISCONNECTED:
             return
         try:
             # Use the first printer for now
             self._printer = Printers().instance().availablePrinters()[0]
-            self._connection = Serial(self._port.name(), self._printer.bps, timeout=PrinterConnection.READ_TIMEOUT, write_timeout=PrinterConnection.WRITE_TIMEOUT)
+            self._connection = Serial(self.port.name, self._printer.bps, timeout=PrinterConnection.READ_TIMEOUT, write_timeout=PrinterConnection.WRITE_TIMEOUT)
             # Read first bytes of boot searching for token 
             boot = self._connection.read_until(self._printer.bootToken.encode(PrinterConnection.ENCODING), PrinterConnection.BOOT_READ_MAX).decode(PrinterConnection.ENCODING)
             if not boot.endswith(self._printer.bootToken):
@@ -96,11 +91,11 @@ class PrinterConnection(Thread):
         with self._lock:
             self._queue.append((self._printGcode, [gcode]))
 
-    def loadFilament(self, gcode):
+    def loadFilament(self):
         with self._lock:
             self._queue.append((self._loadFilament, []))
 
-    def unloadFilament(self, gcode):
+    def unloadFilament(self):
         with self._lock:
             self._queue.append((self._unloadFilament, []))
 
@@ -110,7 +105,7 @@ class PrinterConnection(Thread):
 
     def run(self):
         try:
-            while self._state != PrinterConnection.State.DISCONNECTED:
+            while self.state != PrinterConnection.State.DISCONNECTED:
                 if self._ready and self._queue:
                     with self._lock:
                         task = self._queue.popleft()
@@ -144,10 +139,10 @@ class PrinterConnection(Thread):
             self._setFirmwareVersion(match.group(1))
             return
 
-        match = self._printer.printingProgressResponseRegex.match(response)
+        match = self._printer.printProgressResponseRegex.match(response)
         if match:
             self._setState(PrinterConnection.State.PRINTING)
-            self._setPrintingProgress(match.group("progress"), match.group("total"))
+            self._setPrintProgress(match.group("progress"), match.group("total"))
             return
 
         match = self._printer.notPrintingResponseRegex.match(response)
@@ -156,9 +151,11 @@ class PrinterConnection(Thread):
             return
 
         match = self._printer.resendResponseRegex.match(response)
-        if match:
-            self._transferIndex = match.group(1)
-            return
+        if match.groups():
+            self._transferIndex = int(match.group(1))
+        else:
+            self._transferIndex -= 1
+        return
 
         # TODO No implementado: M36 (info de archivo en impresion)
         # {"err":0,"size":457574,"height":4.00,"layerHeight":0.25,"filament":[6556.3],"generatedBy":"Slic3r 1.1.7 on 2014-11-09 at 17:11:32"} 
@@ -186,35 +183,35 @@ class PrinterConnection(Thread):
                 raise e
 
     def _setState(self, state):
-        if self._state != state:
-            self._state = state
-            print("State: " + str(self._state))
+        if self.state != state:
+            self.state = state
+            self.stateChanged.emit(self.state.name)
 
     def _setFirmwareVersion(self, firmwareVersion): 
-        self._firmwareVersion = firmwareVersion
+        self.firmwareVersion = firmwareVersion
         print("Firmware Version: " + firmwareVersion)
 
     def _setTemperature(self, temperature):
-        self._temperature = temperature
-        print("Temperature: " + temperature)
+        self.temperature = float(temperature)
+        self.temperatureChanged.emit(self.temperature, self.targetTemperature)
 
-    def _setPrintingProgress(self, printingProgress, printingTotal):
-        self._printingProgress = printingProgress
-        self._printingTotal = printingTotal
-        print("Printing progress: " + printingProgress + "/" + printingTotal)
+    def _setPrintProgress(self, printProgress, printTotal):
+        self.printProgress = int(printProgress)
+        self.printTotal = int(printTotal)
+        self.printProgressChanged.emit(self.printProgress, self.printTotal)
 
     def _initialize(self):
-        if self._state != PrinterConnection.State.INITIALIZING:
+        if self.state != PrinterConnection.State.INITIALIZING:
             return
         commands = [(self._send, [command]) for command in self._printer.initializeCommands]
         self._queue.extend(commands)
 
     def _monitor(self):
         with self._lock:
-            if self._state == PrinterConnection.State.PRINTING:
-                commands = [(self._send, [command])for command in self._printer.printingMonitoringCommands]
-                self._queue.extendleft(commands)
-            if self._state != PrinterConnection.State.DISCONNECTED:
+            if self.state == PrinterConnection.State.PRINTING:
+                commands = [(self._send, [command]) for command in self._printer.printingMonitoringCommands]
+                self._queue.extendleft(reversed(commands))
+            if self.state != PrinterConnection.State.DISCONNECTED:
                 self._monitorTimer = Timer(self._printer.monitoringFrequency, self._queue.append, [(self._monitor, [])])
                 self._monitorTimer.start()
 
@@ -227,45 +224,44 @@ class PrinterConnection(Thread):
 
     def _transfer(self):
         data = self._gcode[(self._transferIndex - 1) * self._printer.dataSize:self._transferIndex * self._printer.dataSize]
-        self._send(self._printer.dataCommand(index, data))
+        self._send(self._printer.dataCommand(self._transferIndex, data))
         if self._transferIndex * self._printer.dataSize < len(self._gcode):
             self._transferIndex += 1
             self._queue.appendleft((self._transfer, []))
 
     def _printGcode(self, gcode):
-        if self._state != PrinterConnection.State.IDLE:
+        if self.state != PrinterConnection.State.IDLE:
             return
         self._gcode = gcode
         self._transferIndex = 1
-        commands = [(self._setupTransfer, [gcode])]
-        commands.append((self._setState, [PrinterConnection.State.TRANSFERING]))
+        commands = [(self._setState, [PrinterConnection.State.TRANSFERING])]
         commands.extend([(self._send, [command]) for command in self._printer.preTransferCommands])
         commands.append((self._transfer, []))
         commands.extend([(self._send, [command]) for command in self._printer.postTransferCommands])
         commands.append((self._setState, [PrinterConnection.State.PRINTING]))
         commands.extend([(self._send, [command]) for command in self._printer.printCommands])
-        self._queue.extendleft(commands)
+        self._queue.extendleft(reversed(commands))
 
     def _stop(self):
         commands = []
-        if self._state == PrinterConnection.State.TRANSFERING:
+        if self.state == PrinterConnection.State.TRANSFERING:
             commands.append([(self._send, [command]) for command in self._printer.stopTransferCommands])
-        elif self._state == PrinterConnection.State.PRINTING:
+        elif self.state == PrinterConnection.State.PRINTING:
             commands.append([(self._send, [command]) for command in self._printer.stopPrintCommands])
         else:
             return
         commands.append((self._setState, [PrinterConnection.State.IDLE]))
         commands.append((self._queue.clear, []))
-        self._queue.extendleft(commands)
+        self._queue.extendleft(reversed(commands))
 
     def _loadFilament(self):
-        if self._state != PrinterConnection.State.IDLE:
+        if self.state != PrinterConnection.State.IDLE:
             return
         commands = [(self._send, [command]) for command in self._printer.loadFilamentCommands]
-        self._queue.extendleft(commands)
+        self._queue.extendleft(reversed(commands))
 
     def _unloadFilament(self):
-        if self._state != PrinterConnection.State.IDLE:
+        if self.state != PrinterConnection.State.IDLE:
             return
         commands = [(self._send, [command]) for command in self._printer.unloadFilamentCommands]
-        self._queue.extendleft(commands)
+        self._queue.extendleft(reversed(commands))

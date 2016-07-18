@@ -53,7 +53,7 @@ class SmartControlApplication(QGuiApplication):
 
         self.aboutToQuit.connect(self._onClose)
         self.setWindowIcon(QIcon(Resources.icon(SmartControlApplication.WINDOW_ICON)))
-        Binder(self._internationalization, self._theme).register()
+        Binder(self._internationalization, self._theme, self._printerConnectionManager).register()
 
         self._engine = QQmlApplicationEngine()
         if sys.platform == "win32":

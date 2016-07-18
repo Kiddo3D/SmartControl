@@ -82,10 +82,47 @@
 			}
 		},
 		"smartControl": {
-			"printers": {
+			"printer": {
+				"arrow": {
+					"left": "connection-arrow-left.png",
+					"right": "connection-arrow-right.png"
+				},
+				"type": {
+					"usb": "connection-usb.png",
+					"bluetooth": "connection-bluetooth.png",
+					"searching": "connection-searching.gif"
+				},
+				"name": {
+					"text": {
+						"color": "#FFFFFF",
+						"font" : {
+							"family": "Roboto",
+							"weight": "medium"
+						}
+					}
+				},
+				"port": {
+					"text": {
+						"color": "#FFFFFF",
+						"font" : {
+							"family": "Roboto",
+							"weight": "light"
+						}
+					}
+				},
 				"color": "#707070",
 				"bar": {
 					"color": "#4F4F4F"
+				}
+			},
+			"info": {
+				"color": "#F38787",
+				"text": {
+					"color": "#FFFFFF",
+					"font" : {
+						"family": "Roboto",
+						"weight": "normal"
+					}
 				}
 			},
 			"fileName": {

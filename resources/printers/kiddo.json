@@ -26,7 +26,7 @@
 		"ready": "ok(?: (.*))?", 
 		"temperature": "T:(\\d+(?:\\.\\d+)?) ",
 		"firmwareInfo": "FIRMWARE_NAME:.*PROTOCOL_VERSION:(.*) MACHINE_TYPE:",
-		"printingProgress": "SD printing byte (?P<progress>\\d+)/(?P<total>\\d+)",
+		"printProgress": "SD printing byte (?P<progress>\\d+)/(?P<total>\\d+)",
 		"notPrinting": "Not SD printing",
 		"resend": "Resend: (\\d+)",
 		"error": "Error:(?:Printer halted|Printer stopped due to errors|Something is wrong|Cannot open subdir|SD init fail|volume.init failed|openRoot failed|workDir open failed|open failed|error writing to file|Cannot enter subdir)"

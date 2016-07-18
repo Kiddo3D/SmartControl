@@ -58,6 +58,7 @@ Window {
 
 				MouseArea {
 					anchors.fill: parent
+					cursorShape: Qt.PointingHandCursor
 					onClicked: menuWithHeader.state = menuWithHeader.state == "VISIBLE" ? "HIDDEN" : "VISIBLE"
 				}	
 			}
